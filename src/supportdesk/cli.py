@@ -1,0 +1,29 @@
+"""CLI entrypoint: seed the database or serve the API.
+
+Usage:
+    python -m supportdesk.cli seed
+    python -m supportdesk.cli serve
+"""
+
+from __future__ import annotations
+
+import sys
+
+
+def main() -> None:
+    command = sys.argv[1] if len(sys.argv) > 1 else "help"
+    if command == "seed":
+        from .scripts.seed_data import main as seed_main
+
+        seed_main(sys.argv[2:])
+    elif command == "serve":
+        import uvicorn
+
+        uvicorn.run("supportdesk.main:app", host="0.0.0.0", port=8000, reload=True)
+    else:
+        print("Usage: python -m supportdesk.cli {seed|serve}")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

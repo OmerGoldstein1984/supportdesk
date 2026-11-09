@@ -1,0 +1,92 @@
+[
+  {
+    "title": "How to reset your password",
+    "content": "Go to Settings > Security > Forgot Password and enter your email. A reset link is sent within 5 minutes.",
+    "category": "security",
+    "is_outdated": false
+  },
+  {
+    "title": "Reset password",
+    "content": "Open the login page, click 'Forgot password', and follow the email link to choose a new password.",
+    "category": "security",
+    "is_outdated": true
+  },
+  {
+    "title": "Invoice payment methods",
+    "content": "We accept credit cards, PayPal, and bank transfer. Invoices are issued on the 1st of each month.",
+    "category": "billing",
+    "is_outdated": false
+  },
+  {
+    "title": "Disputing an invoice",
+    "content": "To dispute an invoice, open a ticket within 30 days of the invoice date with the invoice number and reason.",
+    "category": "billing",
+    "is_outdated": false
+  },
+  {
+    "title": "Refund policy",
+    "content": "Refunds are processed within 5-10 business days. Refunds over $100 require manager approval.",
+    "category": "billing",
+    "is_outdated": false
+  },
+  {
+    "title": "Refund policy",
+    "content": "All refunds are approved automatically within 24 hours, regardless of amount.",
+    "category": "billing",
+    "is_outdated": true
+  },
+  {
+    "title": "API error 500",
+    "content": "A 500 error on export usually means a temporary backend issue. Retry after 2 minutes.",
+    "category": "technical",
+    "is_outdated": false
+  },
+  {
+    "title": "Checking service status",
+    "content": "Visit /status or ask support to check whether the API is healthy, degraded, or in outage.",
+    "category": "technical",
+    "is_outdated": false
+  },
+  {
+    "title": "File a bug report",
+    "content": "Include steps to reproduce, expected vs actual behavior, and screenshots when filing a bug ticket.",
+    "category": "technical",
+    "is_outdated": false
+  },
+  {
+    "title": "Changing your plan",
+    "content": "Go to Settings > Billing > Plan and select a new plan. The change takes effect at your next billing cycle.",
+    "category": "billing",
+    "is_outdated": false
+  },
+  {
+    "title": "Account locked",
+    "content": "Your account locks after 5 failed login attempts. It unlocks automatically after 30 minutes, or contact support.",
+    "category": "account",
+    "is_outdated": false
+  },
+  {
+    "title": "Email verification",
+    "content": "Verify your email by clicking the link in the welcome email. Unverified accounts cannot send password resets.",
+    "category": "account",
+    "is_outdated": false
+  },
+  {
+    "title": "Two-factor authentication",
+    "content": "Enable 2FA under Settings > Security for extra account protection.",
+    "category": "security",
+    "is_outdated": false
+  },
+  {
+    "title": "Exporting your data",
+    "content": "Request a data export under Settings > Privacy. Export takes up to 48 hours.",
+    "category": "account",
+    "is_outdated": false
+  },
+  {
+    "title": "Invoice overdue",
+    "content": "Overdue invoices incur a 1.5% monthly fee. Pay now to avoid service interruption.",
+    "category": "billing",
+    "is_outdated": false
+  }
+]

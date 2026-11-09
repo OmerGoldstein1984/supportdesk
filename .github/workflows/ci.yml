@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-types:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Ruff lint
+        run: ruff check src tests
+      - name: Ruff format check
+        run: ruff format --check src tests
+      - name: mypy type check
+        run: mypy src
+
+  test:
+    needs: lint-and-types
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: supportdesk
+          POSTGRES_PASSWORD: supportdesk
+          POSTGRES_DB: supportdesk
+        options: >-
+          --health-cmd "pg_isready -U supportdesk"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Seed test data (SQLite)
+        run: DATABASE_URL=sqlite:///./test.db python -m supportdesk.cli seed
+      - name: Unit + integration tests (fake LLM, sqlite)
+        run: DATABASE_URL=sqlite:///./test.db pytest -m "unit or integration" -q --cov=supportdesk --cov-report=xml --cov-report=term -p no:cacheprovider
+      - name: Eval regression gate (sample)
+        run: DATABASE_URL=sqlite:///./test.db python -m supportdesk.evals.cli run --sample --baseline
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml

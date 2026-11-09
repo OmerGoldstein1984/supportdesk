@@ -1,0 +1,27 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://supportdesk:supportdesk@db:5432/supportdesk
+    depends_on:
+      db:
+        condition: service_started
+    entrypoint: ["sh", "/app/scripts/entrypoint.sh"]
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: supportdesk
+      POSTGRES_PASSWORD: supportdesk
+      POSTGRES_DB: supportdesk
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

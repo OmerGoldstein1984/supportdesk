@@ -1,0 +1,1773 @@
+[
+  {
+    "ticket_id": 1,
+    "customer_id": 90,
+    "subject": "How to reset password",
+    "body": "How do I reset my password in the dashboard?",
+    "expected_specialist": "technical",
+    "expected_tool": "search_knowledge_base",
+    "expected_args": {
+      "query": "reset password"
+    },
+    "expected_outcome": "article cited"
+  },
+  {
+    "ticket_id": 2,
+    "customer_id": 184,
+    "subject": "File bug",
+    "body": "The export button crashes with a 500 error.",
+    "expected_specialist": "technical",
+    "expected_tool": "create_bug_ticket",
+    "expected_args": {
+      "title": "export crashes",
+      "description": "500 on export"
+    },
+    "expected_outcome": "bug ticket created"
+  },
+  {
+    "ticket_id": 3,
+    "customer_id": 159,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 4,
+    "customer_id": 41,
+    "subject": "Angry refund",
+    "body": "This is ridiculous, I was overcharged and nobody replies! Refund me now.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Angry customer refund demand",
+      "body": "..."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 5,
+    "customer_id": 187,
+    "subject": "Angry refund",
+    "body": "This is ridiculous, I was overcharged and nobody replies! Refund me now.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Angry customer refund demand",
+      "body": "..."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 6,
+    "customer_id": 166,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 7,
+    "customer_id": 181,
+    "subject": "Service outage",
+    "body": "Is the API down? I can't log in.",
+    "expected_specialist": "technical",
+    "expected_tool": "get_service_status",
+    "expected_args": {},
+    "expected_outcome": "status returned"
+  },
+  {
+    "ticket_id": 8,
+    "customer_id": 102,
+    "subject": "Invoice inquiry",
+    "body": "Can you send me a copy of invoice #500?",
+    "expected_specialist": "billing",
+    "expected_tool": "get_invoice",
+    "expected_args": {
+      "invoice_id": 500
+    },
+    "expected_outcome": "invoice returned"
+  },
+  {
+    "ticket_id": 9,
+    "customer_id": 58,
+    "subject": "Account lookup",
+    "body": "What email is on my account?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 10,
+    "customer_id": 200,
+    "subject": "Refund request",
+    "body": "I was charged twice for invoice #300, please refund $49.00.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 300,
+      "amount": 49.0
+    },
+    "expected_outcome": "refund processed"
+  },
+  {
+    "ticket_id": 11,
+    "customer_id": 128,
+    "subject": "Vague",
+    "body": "Help, nothing works.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Vague request - nothing works",
+      "body": "Help, nothing works."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 12,
+    "customer_id": 102,
+    "subject": "Refund request",
+    "body": "I was charged twice for invoice #300, please refund $49.00.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 300,
+      "amount": 49.0
+    },
+    "expected_outcome": "refund processed"
+  },
+  {
+    "ticket_id": 13,
+    "customer_id": 139,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 14,
+    "customer_id": 140,
+    "subject": "How to reset password",
+    "body": "How do I reset my password in the dashboard?",
+    "expected_specialist": "technical",
+    "expected_tool": "search_knowledge_base",
+    "expected_args": {
+      "query": "reset password"
+    },
+    "expected_outcome": "article cited"
+  },
+  {
+    "ticket_id": 15,
+    "customer_id": 83,
+    "subject": "Change plan",
+    "body": "I want to switch from Basic to Premium plan.",
+    "expected_specialist": "billing",
+    "expected_tool": "change_plan",
+    "expected_args": {
+      "plan_name": "Premium"
+    },
+    "expected_outcome": "plan changed"
+  },
+  {
+    "ticket_id": 16,
+    "customer_id": 170,
+    "subject": "Vague",
+    "body": "Help, nothing works.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Vague request - nothing works",
+      "body": "Help, nothing works."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 17,
+    "customer_id": 190,
+    "subject": "Typo-filled",
+    "body": "pls refund my invioce #200 i was chargd twise",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 200,
+      "amount": 0
+    },
+    "expected_outcome": "refund reviewed"
+  },
+  {
+    "ticket_id": 18,
+    "customer_id": 66,
+    "subject": "Service outage",
+    "body": "Is the API down? I can't log in.",
+    "expected_specialist": "technical",
+    "expected_tool": "get_service_status",
+    "expected_args": {},
+    "expected_outcome": "status returned"
+  },
+  {
+    "ticket_id": 19,
+    "customer_id": 85,
+    "subject": "Typo-filled",
+    "body": "pls refund my invioce #200 i was chargd twise",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 200,
+      "amount": 0
+    },
+    "expected_outcome": "refund reviewed"
+  },
+  {
+    "ticket_id": 20,
+    "customer_id": 165,
+    "subject": "Refund over limit",
+    "body": "Refund invoice #120 for $250.00, I need it back today.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 120,
+      "amount": 250.0
+    },
+    "expected_outcome": "approval required"
+  },
+  {
+    "ticket_id": 21,
+    "customer_id": 115,
+    "subject": "Refund over limit",
+    "body": "Refund invoice #120 for $250.00, I need it back today.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 120,
+      "amount": 250.0
+    },
+    "expected_outcome": "approval required"
+  },
+  {
+    "ticket_id": 22,
+    "customer_id": 171,
+    "subject": "Typo-filled",
+    "body": "pls refund my invioce #200 i was chargd twise",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 200,
+      "amount": 0
+    },
+    "expected_outcome": "refund reviewed"
+  },
+  {
+    "ticket_id": 23,
+    "customer_id": 69,
+    "subject": "How to reset password",
+    "body": "How do I reset my password in the dashboard?",
+    "expected_specialist": "technical",
+    "expected_tool": "search_knowledge_base",
+    "expected_args": {
+      "query": "reset password"
+    },
+    "expected_outcome": "article cited"
+  },
+  {
+    "ticket_id": 24,
+    "customer_id": 150,
+    "subject": "Multi-intent",
+    "body": "Can you refund invoice #90 and also change my plan to Standard?",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 90,
+      "amount": 0
+    },
+    "expected_outcome": "refund + plan change"
+  },
+  {
+    "ticket_id": 25,
+    "customer_id": 49,
+    "subject": "Refund request",
+    "body": "I was charged twice for invoice #300, please refund $49.00.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 300,
+      "amount": 49.0
+    },
+    "expected_outcome": "refund processed"
+  },
+  {
+    "ticket_id": 26,
+    "customer_id": 194,
+    "subject": "File bug",
+    "body": "The export button crashes with a 500 error.",
+    "expected_specialist": "technical",
+    "expected_tool": "create_bug_ticket",
+    "expected_args": {
+      "title": "export crashes",
+      "description": "500 on export"
+    },
+    "expected_outcome": "bug ticket created"
+  },
+  {
+    "ticket_id": 27,
+    "customer_id": 45,
+    "subject": "Refund request",
+    "body": "I was charged twice for invoice #300, please refund $49.00.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 300,
+      "amount": 49.0
+    },
+    "expected_outcome": "refund processed"
+  },
+  {
+    "ticket_id": 28,
+    "customer_id": 51,
+    "subject": "Change plan",
+    "body": "I want to switch from Basic to Premium plan.",
+    "expected_specialist": "billing",
+    "expected_tool": "change_plan",
+    "expected_args": {
+      "plan_name": "Premium"
+    },
+    "expected_outcome": "plan changed"
+  },
+  {
+    "ticket_id": 29,
+    "customer_id": 74,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 30,
+    "customer_id": 144,
+    "subject": "Refund request",
+    "body": "I was charged twice for invoice #300, please refund $49.00.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 300,
+      "amount": 49.0
+    },
+    "expected_outcome": "refund processed"
+  },
+  {
+    "ticket_id": 31,
+    "customer_id": 163,
+    "subject": "How to reset password",
+    "body": "How do I reset my password in the dashboard?",
+    "expected_specialist": "technical",
+    "expected_tool": "search_knowledge_base",
+    "expected_args": {
+      "query": "reset password"
+    },
+    "expected_outcome": "article cited"
+  },
+  {
+    "ticket_id": 32,
+    "customer_id": 136,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 33,
+    "customer_id": 190,
+    "subject": "Change plan",
+    "body": "I want to switch from Basic to Premium plan.",
+    "expected_specialist": "billing",
+    "expected_tool": "change_plan",
+    "expected_args": {
+      "plan_name": "Premium"
+    },
+    "expected_outcome": "plan changed"
+  },
+  {
+    "ticket_id": 34,
+    "customer_id": 92,
+    "subject": "Refund request",
+    "body": "I was charged twice for invoice #300, please refund $49.00.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 300,
+      "amount": 49.0
+    },
+    "expected_outcome": "refund processed"
+  },
+  {
+    "ticket_id": 35,
+    "customer_id": 14,
+    "subject": "Vague",
+    "body": "Help, nothing works.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Vague request - nothing works",
+      "body": "Help, nothing works."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 36,
+    "customer_id": 30,
+    "subject": "Refund over limit",
+    "body": "Refund invoice #120 for $250.00, I need it back today.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 120,
+      "amount": 250.0
+    },
+    "expected_outcome": "approval required"
+  },
+  {
+    "ticket_id": 37,
+    "customer_id": 166,
+    "subject": "How to reset password",
+    "body": "How do I reset my password in the dashboard?",
+    "expected_specialist": "technical",
+    "expected_tool": "search_knowledge_base",
+    "expected_args": {
+      "query": "reset password"
+    },
+    "expected_outcome": "article cited"
+  },
+  {
+    "ticket_id": 38,
+    "customer_id": 197,
+    "subject": "Vague",
+    "body": "Help, nothing works.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Vague request - nothing works",
+      "body": "Help, nothing works."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 39,
+    "customer_id": 58,
+    "subject": "File bug",
+    "body": "The export button crashes with a 500 error.",
+    "expected_specialist": "technical",
+    "expected_tool": "create_bug_ticket",
+    "expected_args": {
+      "title": "export crashes",
+      "description": "500 on export"
+    },
+    "expected_outcome": "bug ticket created"
+  },
+  {
+    "ticket_id": 40,
+    "customer_id": 178,
+    "subject": "Account lookup",
+    "body": "What email is on my account?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 41,
+    "customer_id": 163,
+    "subject": "Hebrew ticket",
+    "body": "\u05e9\u05dc\u05d5\u05dd, \u05d4\u05d7\u05e9\u05d1\u05d5\u05df \u05e9\u05dc\u05d9 \u05e0\u05e2\u05d5\u05dc \u05d5\u05dc\u05d0 \u05de\u05e6\u05dc\u05d9\u05d7 \u05dc\u05d4\u05d9\u05db\u05e0\u05e1. \u05d0\u05e4\u05e9\u05e8 \u05e2\u05d6\u05e8\u05d4?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 42,
+    "customer_id": 118,
+    "subject": "Account lookup",
+    "body": "What email is on my account?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 43,
+    "customer_id": 84,
+    "subject": "Angry refund",
+    "body": "This is ridiculous, I was overcharged and nobody replies! Refund me now.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Angry customer refund demand",
+      "body": "..."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 44,
+    "customer_id": 11,
+    "subject": "Angry refund",
+    "body": "This is ridiculous, I was overcharged and nobody replies! Refund me now.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Angry customer refund demand",
+      "body": "..."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 45,
+    "customer_id": 193,
+    "subject": "File bug",
+    "body": "The export button crashes with a 500 error.",
+    "expected_specialist": "technical",
+    "expected_tool": "create_bug_ticket",
+    "expected_args": {
+      "title": "export crashes",
+      "description": "500 on export"
+    },
+    "expected_outcome": "bug ticket created"
+  },
+  {
+    "ticket_id": 46,
+    "customer_id": 178,
+    "subject": "Refund over limit",
+    "body": "Refund invoice #120 for $250.00, I need it back today.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 120,
+      "amount": 250.0
+    },
+    "expected_outcome": "approval required"
+  },
+  {
+    "ticket_id": 47,
+    "customer_id": 43,
+    "subject": "Multi-intent",
+    "body": "Can you refund invoice #90 and also change my plan to Standard?",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 90,
+      "amount": 0
+    },
+    "expected_outcome": "refund + plan change"
+  },
+  {
+    "ticket_id": 48,
+    "customer_id": 160,
+    "subject": "Typo-filled",
+    "body": "pls refund my invioce #200 i was chargd twise",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 200,
+      "amount": 0
+    },
+    "expected_outcome": "refund reviewed"
+  },
+  {
+    "ticket_id": 49,
+    "customer_id": 187,
+    "subject": "How to reset password",
+    "body": "How do I reset my password in the dashboard?",
+    "expected_specialist": "technical",
+    "expected_tool": "search_knowledge_base",
+    "expected_args": {
+      "query": "reset password"
+    },
+    "expected_outcome": "article cited"
+  },
+  {
+    "ticket_id": 50,
+    "customer_id": 188,
+    "subject": "Vague",
+    "body": "Help, nothing works.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Vague request - nothing works",
+      "body": "Help, nothing works."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 51,
+    "customer_id": 179,
+    "subject": "Change plan",
+    "body": "I want to switch from Basic to Premium plan.",
+    "expected_specialist": "billing",
+    "expected_tool": "change_plan",
+    "expected_args": {
+      "plan_name": "Premium"
+    },
+    "expected_outcome": "plan changed"
+  },
+  {
+    "ticket_id": 52,
+    "customer_id": 199,
+    "subject": "Angry refund",
+    "body": "This is ridiculous, I was overcharged and nobody replies! Refund me now.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Angry customer refund demand",
+      "body": "..."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 53,
+    "customer_id": 73,
+    "subject": "Typo-filled",
+    "body": "pls refund my invioce #200 i was chargd twise",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 200,
+      "amount": 0
+    },
+    "expected_outcome": "refund reviewed"
+  },
+  {
+    "ticket_id": 54,
+    "customer_id": 52,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 55,
+    "customer_id": 173,
+    "subject": "Refund request",
+    "body": "I was charged twice for invoice #300, please refund $49.00.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 300,
+      "amount": 49.0
+    },
+    "expected_outcome": "refund processed"
+  },
+  {
+    "ticket_id": 56,
+    "customer_id": 161,
+    "subject": "How to reset password",
+    "body": "How do I reset my password in the dashboard?",
+    "expected_specialist": "technical",
+    "expected_tool": "search_knowledge_base",
+    "expected_args": {
+      "query": "reset password"
+    },
+    "expected_outcome": "article cited"
+  },
+  {
+    "ticket_id": 57,
+    "customer_id": 141,
+    "subject": "Vague",
+    "body": "Help, nothing works.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Vague request - nothing works",
+      "body": "Help, nothing works."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 58,
+    "customer_id": 55,
+    "subject": "Typo-filled",
+    "body": "pls refund my invioce #200 i was chargd twise",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 200,
+      "amount": 0
+    },
+    "expected_outcome": "refund reviewed"
+  },
+  {
+    "ticket_id": 59,
+    "customer_id": 94,
+    "subject": "Multi-intent",
+    "body": "Can you refund invoice #90 and also change my plan to Standard?",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 90,
+      "amount": 0
+    },
+    "expected_outcome": "refund + plan change"
+  },
+  {
+    "ticket_id": 60,
+    "customer_id": 19,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 61,
+    "customer_id": 159,
+    "subject": "Typo-filled",
+    "body": "pls refund my invioce #200 i was chargd twise",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 200,
+      "amount": 0
+    },
+    "expected_outcome": "refund reviewed"
+  },
+  {
+    "ticket_id": 62,
+    "customer_id": 99,
+    "subject": "Change plan",
+    "body": "I want to switch from Basic to Premium plan.",
+    "expected_specialist": "billing",
+    "expected_tool": "change_plan",
+    "expected_args": {
+      "plan_name": "Premium"
+    },
+    "expected_outcome": "plan changed"
+  },
+  {
+    "ticket_id": 63,
+    "customer_id": 196,
+    "subject": "How to reset password",
+    "body": "How do I reset my password in the dashboard?",
+    "expected_specialist": "technical",
+    "expected_tool": "search_knowledge_base",
+    "expected_args": {
+      "query": "reset password"
+    },
+    "expected_outcome": "article cited"
+  },
+  {
+    "ticket_id": 64,
+    "customer_id": 103,
+    "subject": "Typo-filled",
+    "body": "pls refund my invioce #200 i was chargd twise",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 200,
+      "amount": 0
+    },
+    "expected_outcome": "refund reviewed"
+  },
+  {
+    "ticket_id": 65,
+    "customer_id": 58,
+    "subject": "Change plan",
+    "body": "I want to switch from Basic to Premium plan.",
+    "expected_specialist": "billing",
+    "expected_tool": "change_plan",
+    "expected_args": {
+      "plan_name": "Premium"
+    },
+    "expected_outcome": "plan changed"
+  },
+  {
+    "ticket_id": 66,
+    "customer_id": 68,
+    "subject": "Refund over limit",
+    "body": "Refund invoice #120 for $250.00, I need it back today.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 120,
+      "amount": 250.0
+    },
+    "expected_outcome": "approval required"
+  },
+  {
+    "ticket_id": 67,
+    "customer_id": 126,
+    "subject": "Hebrew ticket",
+    "body": "\u05e9\u05dc\u05d5\u05dd, \u05d4\u05d7\u05e9\u05d1\u05d5\u05df \u05e9\u05dc\u05d9 \u05e0\u05e2\u05d5\u05dc \u05d5\u05dc\u05d0 \u05de\u05e6\u05dc\u05d9\u05d7 \u05dc\u05d4\u05d9\u05db\u05e0\u05e1. \u05d0\u05e4\u05e9\u05e8 \u05e2\u05d6\u05e8\u05d4?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 68,
+    "customer_id": 187,
+    "subject": "Vague",
+    "body": "Help, nothing works.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Vague request - nothing works",
+      "body": "Help, nothing works."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 69,
+    "customer_id": 21,
+    "subject": "Multi-intent",
+    "body": "Can you refund invoice #90 and also change my plan to Standard?",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 90,
+      "amount": 0
+    },
+    "expected_outcome": "refund + plan change"
+  },
+  {
+    "ticket_id": 70,
+    "customer_id": 12,
+    "subject": "Hebrew ticket",
+    "body": "\u05e9\u05dc\u05d5\u05dd, \u05d4\u05d7\u05e9\u05d1\u05d5\u05df \u05e9\u05dc\u05d9 \u05e0\u05e2\u05d5\u05dc \u05d5\u05dc\u05d0 \u05de\u05e6\u05dc\u05d9\u05d7 \u05dc\u05d4\u05d9\u05db\u05e0\u05e1. \u05d0\u05e4\u05e9\u05e8 \u05e2\u05d6\u05e8\u05d4?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 71,
+    "customer_id": 184,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 72,
+    "customer_id": 70,
+    "subject": "Refund request",
+    "body": "I was charged twice for invoice #300, please refund $49.00.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 300,
+      "amount": 49.0
+    },
+    "expected_outcome": "refund processed"
+  },
+  {
+    "ticket_id": 73,
+    "customer_id": 131,
+    "subject": "Account lookup",
+    "body": "What email is on my account?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 74,
+    "customer_id": 129,
+    "subject": "Refund over limit",
+    "body": "Refund invoice #120 for $250.00, I need it back today.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 120,
+      "amount": 250.0
+    },
+    "expected_outcome": "approval required"
+  },
+  {
+    "ticket_id": 75,
+    "customer_id": 62,
+    "subject": "Refund request",
+    "body": "I was charged twice for invoice #300, please refund $49.00.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 300,
+      "amount": 49.0
+    },
+    "expected_outcome": "refund processed"
+  },
+  {
+    "ticket_id": 76,
+    "customer_id": 120,
+    "subject": "Change plan",
+    "body": "I want to switch from Basic to Premium plan.",
+    "expected_specialist": "billing",
+    "expected_tool": "change_plan",
+    "expected_args": {
+      "plan_name": "Premium"
+    },
+    "expected_outcome": "plan changed"
+  },
+  {
+    "ticket_id": 77,
+    "customer_id": 127,
+    "subject": "How to reset password",
+    "body": "How do I reset my password in the dashboard?",
+    "expected_specialist": "technical",
+    "expected_tool": "search_knowledge_base",
+    "expected_args": {
+      "query": "reset password"
+    },
+    "expected_outcome": "article cited"
+  },
+  {
+    "ticket_id": 78,
+    "customer_id": 120,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 79,
+    "customer_id": 95,
+    "subject": "Hebrew ticket",
+    "body": "\u05e9\u05dc\u05d5\u05dd, \u05d4\u05d7\u05e9\u05d1\u05d5\u05df \u05e9\u05dc\u05d9 \u05e0\u05e2\u05d5\u05dc \u05d5\u05dc\u05d0 \u05de\u05e6\u05dc\u05d9\u05d7 \u05dc\u05d4\u05d9\u05db\u05e0\u05e1. \u05d0\u05e4\u05e9\u05e8 \u05e2\u05d6\u05e8\u05d4?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 80,
+    "customer_id": 104,
+    "subject": "Angry refund",
+    "body": "This is ridiculous, I was overcharged and nobody replies! Refund me now.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Angry customer refund demand",
+      "body": "..."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 81,
+    "customer_id": 131,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 82,
+    "customer_id": 37,
+    "subject": "Refund request",
+    "body": "I was charged twice for invoice #300, please refund $49.00.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 300,
+      "amount": 49.0
+    },
+    "expected_outcome": "refund processed"
+  },
+  {
+    "ticket_id": 83,
+    "customer_id": 93,
+    "subject": "Vague",
+    "body": "Help, nothing works.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Vague request - nothing works",
+      "body": "Help, nothing works."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 84,
+    "customer_id": 105,
+    "subject": "Service outage",
+    "body": "Is the API down? I can't log in.",
+    "expected_specialist": "technical",
+    "expected_tool": "get_service_status",
+    "expected_args": {},
+    "expected_outcome": "status returned"
+  },
+  {
+    "ticket_id": 85,
+    "customer_id": 32,
+    "subject": "Refund over limit",
+    "body": "Refund invoice #120 for $250.00, I need it back today.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 120,
+      "amount": 250.0
+    },
+    "expected_outcome": "approval required"
+  },
+  {
+    "ticket_id": 86,
+    "customer_id": 24,
+    "subject": "Typo-filled",
+    "body": "pls refund my invioce #200 i was chargd twise",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 200,
+      "amount": 0
+    },
+    "expected_outcome": "refund reviewed"
+  },
+  {
+    "ticket_id": 87,
+    "customer_id": 61,
+    "subject": "Invoice inquiry",
+    "body": "Can you send me a copy of invoice #500?",
+    "expected_specialist": "billing",
+    "expected_tool": "get_invoice",
+    "expected_args": {
+      "invoice_id": 500
+    },
+    "expected_outcome": "invoice returned"
+  },
+  {
+    "ticket_id": 88,
+    "customer_id": 30,
+    "subject": "Service outage",
+    "body": "Is the API down? I can't log in.",
+    "expected_specialist": "technical",
+    "expected_tool": "get_service_status",
+    "expected_args": {},
+    "expected_outcome": "status returned"
+  },
+  {
+    "ticket_id": 89,
+    "customer_id": 42,
+    "subject": "Multi-intent",
+    "body": "Can you refund invoice #90 and also change my plan to Standard?",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 90,
+      "amount": 0
+    },
+    "expected_outcome": "refund + plan change"
+  },
+  {
+    "ticket_id": 90,
+    "customer_id": 40,
+    "subject": "Typo-filled",
+    "body": "pls refund my invioce #200 i was chargd twise",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 200,
+      "amount": 0
+    },
+    "expected_outcome": "refund reviewed"
+  },
+  {
+    "ticket_id": 91,
+    "customer_id": 25,
+    "subject": "Account lookup",
+    "body": "What email is on my account?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 92,
+    "customer_id": 77,
+    "subject": "Change plan",
+    "body": "I want to switch from Basic to Premium plan.",
+    "expected_specialist": "billing",
+    "expected_tool": "change_plan",
+    "expected_args": {
+      "plan_name": "Premium"
+    },
+    "expected_outcome": "plan changed"
+  },
+  {
+    "ticket_id": 93,
+    "customer_id": 115,
+    "subject": "Refund over limit",
+    "body": "Refund invoice #120 for $250.00, I need it back today.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 120,
+      "amount": 250.0
+    },
+    "expected_outcome": "approval required"
+  },
+  {
+    "ticket_id": 94,
+    "customer_id": 194,
+    "subject": "Vague",
+    "body": "Help, nothing works.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Vague request - nothing works",
+      "body": "Help, nothing works."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 95,
+    "customer_id": 144,
+    "subject": "Hebrew ticket",
+    "body": "\u05e9\u05dc\u05d5\u05dd, \u05d4\u05d7\u05e9\u05d1\u05d5\u05df \u05e9\u05dc\u05d9 \u05e0\u05e2\u05d5\u05dc \u05d5\u05dc\u05d0 \u05de\u05e6\u05dc\u05d9\u05d7 \u05dc\u05d4\u05d9\u05db\u05e0\u05e1. \u05d0\u05e4\u05e9\u05e8 \u05e2\u05d6\u05e8\u05d4?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 96,
+    "customer_id": 136,
+    "subject": "Hebrew ticket",
+    "body": "\u05e9\u05dc\u05d5\u05dd, \u05d4\u05d7\u05e9\u05d1\u05d5\u05df \u05e9\u05dc\u05d9 \u05e0\u05e2\u05d5\u05dc \u05d5\u05dc\u05d0 \u05de\u05e6\u05dc\u05d9\u05d7 \u05dc\u05d4\u05d9\u05db\u05e0\u05e1. \u05d0\u05e4\u05e9\u05e8 \u05e2\u05d6\u05e8\u05d4?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 97,
+    "customer_id": 50,
+    "subject": "Vague",
+    "body": "Help, nothing works.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Vague request - nothing works",
+      "body": "Help, nothing works."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 98,
+    "customer_id": 71,
+    "subject": "Refund over limit",
+    "body": "Refund invoice #120 for $250.00, I need it back today.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 120,
+      "amount": 250.0
+    },
+    "expected_outcome": "approval required"
+  },
+  {
+    "ticket_id": 99,
+    "customer_id": 182,
+    "subject": "Multi-intent",
+    "body": "Can you refund invoice #90 and also change my plan to Standard?",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 90,
+      "amount": 0
+    },
+    "expected_outcome": "refund + plan change"
+  },
+  {
+    "ticket_id": 100,
+    "customer_id": 178,
+    "subject": "Invoice inquiry",
+    "body": "Can you send me a copy of invoice #500?",
+    "expected_specialist": "billing",
+    "expected_tool": "get_invoice",
+    "expected_args": {
+      "invoice_id": 500
+    },
+    "expected_outcome": "invoice returned"
+  },
+  {
+    "ticket_id": 101,
+    "customer_id": 22,
+    "subject": "Refund over limit",
+    "body": "Refund invoice #120 for $250.00, I need it back today.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 120,
+      "amount": 250.0
+    },
+    "expected_outcome": "approval required"
+  },
+  {
+    "ticket_id": 102,
+    "customer_id": 28,
+    "subject": "Account lookup",
+    "body": "What email is on my account?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 103,
+    "customer_id": 37,
+    "subject": "File bug",
+    "body": "The export button crashes with a 500 error.",
+    "expected_specialist": "technical",
+    "expected_tool": "create_bug_ticket",
+    "expected_args": {
+      "title": "export crashes",
+      "description": "500 on export"
+    },
+    "expected_outcome": "bug ticket created"
+  },
+  {
+    "ticket_id": 104,
+    "customer_id": 134,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 105,
+    "customer_id": 128,
+    "subject": "Hebrew ticket",
+    "body": "\u05e9\u05dc\u05d5\u05dd, \u05d4\u05d7\u05e9\u05d1\u05d5\u05df \u05e9\u05dc\u05d9 \u05e0\u05e2\u05d5\u05dc \u05d5\u05dc\u05d0 \u05de\u05e6\u05dc\u05d9\u05d7 \u05dc\u05d4\u05d9\u05db\u05e0\u05e1. \u05d0\u05e4\u05e9\u05e8 \u05e2\u05d6\u05e8\u05d4?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 106,
+    "customer_id": 51,
+    "subject": "Account lookup",
+    "body": "What email is on my account?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 107,
+    "customer_id": 182,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 108,
+    "customer_id": 114,
+    "subject": "Invoice inquiry",
+    "body": "Can you send me a copy of invoice #500?",
+    "expected_specialist": "billing",
+    "expected_tool": "get_invoice",
+    "expected_args": {
+      "invoice_id": 500
+    },
+    "expected_outcome": "invoice returned"
+  },
+  {
+    "ticket_id": 109,
+    "customer_id": 81,
+    "subject": "Account lookup",
+    "body": "What email is on my account?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 110,
+    "customer_id": 171,
+    "subject": "Vague",
+    "body": "Help, nothing works.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Vague request - nothing works",
+      "body": "Help, nothing works."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 111,
+    "customer_id": 177,
+    "subject": "Account lookup",
+    "body": "What email is on my account?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 112,
+    "customer_id": 12,
+    "subject": "Hebrew ticket",
+    "body": "\u05e9\u05dc\u05d5\u05dd, \u05d4\u05d7\u05e9\u05d1\u05d5\u05df \u05e9\u05dc\u05d9 \u05e0\u05e2\u05d5\u05dc \u05d5\u05dc\u05d0 \u05de\u05e6\u05dc\u05d9\u05d7 \u05dc\u05d4\u05d9\u05db\u05e0\u05e1. \u05d0\u05e4\u05e9\u05e8 \u05e2\u05d6\u05e8\u05d4?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 113,
+    "customer_id": 74,
+    "subject": "Refund request",
+    "body": "I was charged twice for invoice #300, please refund $49.00.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 300,
+      "amount": 49.0
+    },
+    "expected_outcome": "refund processed"
+  },
+  {
+    "ticket_id": 114,
+    "customer_id": 37,
+    "subject": "Refund request",
+    "body": "I was charged twice for invoice #300, please refund $49.00.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 300,
+      "amount": 49.0
+    },
+    "expected_outcome": "refund processed"
+  },
+  {
+    "ticket_id": 115,
+    "customer_id": 32,
+    "subject": "How to reset password",
+    "body": "How do I reset my password in the dashboard?",
+    "expected_specialist": "technical",
+    "expected_tool": "search_knowledge_base",
+    "expected_args": {
+      "query": "reset password"
+    },
+    "expected_outcome": "article cited"
+  },
+  {
+    "ticket_id": 116,
+    "customer_id": 29,
+    "subject": "Multi-intent",
+    "body": "Can you refund invoice #90 and also change my plan to Standard?",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 90,
+      "amount": 0
+    },
+    "expected_outcome": "refund + plan change"
+  },
+  {
+    "ticket_id": 117,
+    "customer_id": 72,
+    "subject": "Account lookup",
+    "body": "What email is on my account?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 118,
+    "customer_id": 149,
+    "subject": "Account lookup",
+    "body": "What email is on my account?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 119,
+    "customer_id": 75,
+    "subject": "Refund request",
+    "body": "I was charged twice for invoice #300, please refund $49.00.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 300,
+      "amount": 49.0
+    },
+    "expected_outcome": "refund processed"
+  },
+  {
+    "ticket_id": 120,
+    "customer_id": 160,
+    "subject": "Multi-intent",
+    "body": "Can you refund invoice #90 and also change my plan to Standard?",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 90,
+      "amount": 0
+    },
+    "expected_outcome": "refund + plan change"
+  },
+  {
+    "ticket_id": 121,
+    "customer_id": 181,
+    "subject": "Refund over limit",
+    "body": "Refund invoice #120 for $250.00, I need it back today.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 120,
+      "amount": 250.0
+    },
+    "expected_outcome": "approval required"
+  },
+  {
+    "ticket_id": 122,
+    "customer_id": 119,
+    "subject": "Invoice inquiry",
+    "body": "Can you send me a copy of invoice #500?",
+    "expected_specialist": "billing",
+    "expected_tool": "get_invoice",
+    "expected_args": {
+      "invoice_id": 500
+    },
+    "expected_outcome": "invoice returned"
+  },
+  {
+    "ticket_id": 123,
+    "customer_id": 123,
+    "subject": "Angry refund",
+    "body": "This is ridiculous, I was overcharged and nobody replies! Refund me now.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Angry customer refund demand",
+      "body": "..."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 124,
+    "customer_id": 138,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 125,
+    "customer_id": 58,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 126,
+    "customer_id": 178,
+    "subject": "Refund request",
+    "body": "I was charged twice for invoice #300, please refund $49.00.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 300,
+      "amount": 49.0
+    },
+    "expected_outcome": "refund processed"
+  },
+  {
+    "ticket_id": 127,
+    "customer_id": 143,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 128,
+    "customer_id": 32,
+    "subject": "Invoice inquiry",
+    "body": "Can you send me a copy of invoice #500?",
+    "expected_specialist": "billing",
+    "expected_tool": "get_invoice",
+    "expected_args": {
+      "invoice_id": 500
+    },
+    "expected_outcome": "invoice returned"
+  },
+  {
+    "ticket_id": 129,
+    "customer_id": 63,
+    "subject": "File bug",
+    "body": "The export button crashes with a 500 error.",
+    "expected_specialist": "technical",
+    "expected_tool": "create_bug_ticket",
+    "expected_args": {
+      "title": "export crashes",
+      "description": "500 on export"
+    },
+    "expected_outcome": "bug ticket created"
+  },
+  {
+    "ticket_id": 130,
+    "customer_id": 1,
+    "subject": "Service outage",
+    "body": "Is the API down? I can't log in.",
+    "expected_specialist": "technical",
+    "expected_tool": "get_service_status",
+    "expected_args": {},
+    "expected_outcome": "status returned"
+  },
+  {
+    "ticket_id": 131,
+    "customer_id": 119,
+    "subject": "Account lookup",
+    "body": "What email is on my account?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 132,
+    "customer_id": 51,
+    "subject": "Service outage",
+    "body": "Is the API down? I can't log in.",
+    "expected_specialist": "technical",
+    "expected_tool": "get_service_status",
+    "expected_args": {},
+    "expected_outcome": "status returned"
+  },
+  {
+    "ticket_id": 133,
+    "customer_id": 113,
+    "subject": "File bug",
+    "body": "The export button crashes with a 500 error.",
+    "expected_specialist": "technical",
+    "expected_tool": "create_bug_ticket",
+    "expected_args": {
+      "title": "export crashes",
+      "description": "500 on export"
+    },
+    "expected_outcome": "bug ticket created"
+  },
+  {
+    "ticket_id": 134,
+    "customer_id": 23,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 135,
+    "customer_id": 7,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 136,
+    "customer_id": 198,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 137,
+    "customer_id": 176,
+    "subject": "Service outage",
+    "body": "Is the API down? I can't log in.",
+    "expected_specialist": "technical",
+    "expected_tool": "get_service_status",
+    "expected_args": {},
+    "expected_outcome": "status returned"
+  },
+  {
+    "ticket_id": 138,
+    "customer_id": 165,
+    "subject": "Hebrew ticket",
+    "body": "\u05e9\u05dc\u05d5\u05dd, \u05d4\u05d7\u05e9\u05d1\u05d5\u05df \u05e9\u05dc\u05d9 \u05e0\u05e2\u05d5\u05dc \u05d5\u05dc\u05d0 \u05de\u05e6\u05dc\u05d9\u05d7 \u05dc\u05d4\u05d9\u05db\u05e0\u05e1. \u05d0\u05e4\u05e9\u05e8 \u05e2\u05d6\u05e8\u05d4?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 139,
+    "customer_id": 104,
+    "subject": "Refund over limit",
+    "body": "Refund invoice #120 for $250.00, I need it back today.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 120,
+      "amount": 250.0
+    },
+    "expected_outcome": "approval required"
+  },
+  {
+    "ticket_id": 140,
+    "customer_id": 84,
+    "subject": "Service outage",
+    "body": "Is the API down? I can't log in.",
+    "expected_specialist": "technical",
+    "expected_tool": "get_service_status",
+    "expected_args": {},
+    "expected_outcome": "status returned"
+  },
+  {
+    "ticket_id": 141,
+    "customer_id": 187,
+    "subject": "Service outage",
+    "body": "Is the API down? I can't log in.",
+    "expected_specialist": "technical",
+    "expected_tool": "get_service_status",
+    "expected_args": {},
+    "expected_outcome": "status returned"
+  },
+  {
+    "ticket_id": 142,
+    "customer_id": 64,
+    "subject": "Change plan",
+    "body": "I want to switch from Basic to Premium plan.",
+    "expected_specialist": "billing",
+    "expected_tool": "change_plan",
+    "expected_args": {
+      "plan_name": "Premium"
+    },
+    "expected_outcome": "plan changed"
+  },
+  {
+    "ticket_id": 143,
+    "customer_id": 69,
+    "subject": "Angry refund",
+    "body": "This is ridiculous, I was overcharged and nobody replies! Refund me now.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Angry customer refund demand",
+      "body": "..."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 144,
+    "customer_id": 54,
+    "subject": "Refund request",
+    "body": "I was charged twice for invoice #300, please refund $49.00.",
+    "expected_specialist": "billing",
+    "expected_tool": "issue_refund",
+    "expected_args": {
+      "invoice_id": 300,
+      "amount": 49.0
+    },
+    "expected_outcome": "refund processed"
+  },
+  {
+    "ticket_id": 145,
+    "customer_id": 39,
+    "subject": "Service outage",
+    "body": "Is the API down? I can't log in.",
+    "expected_specialist": "technical",
+    "expected_tool": "get_service_status",
+    "expected_args": {},
+    "expected_outcome": "status returned"
+  },
+  {
+    "ticket_id": 146,
+    "customer_id": 40,
+    "subject": "Password reset",
+    "body": "I forgot my password, please send a reset link.",
+    "expected_specialist": "account",
+    "expected_tool": "send_password_reset",
+    "expected_args": {},
+    "expected_outcome": "reset sent"
+  },
+  {
+    "ticket_id": 147,
+    "customer_id": 146,
+    "subject": "Hebrew ticket",
+    "body": "\u05e9\u05dc\u05d5\u05dd, \u05d4\u05d7\u05e9\u05d1\u05d5\u05df \u05e9\u05dc\u05d9 \u05e0\u05e2\u05d5\u05dc \u05d5\u05dc\u05d0 \u05de\u05e6\u05dc\u05d9\u05d7 \u05dc\u05d4\u05d9\u05db\u05e0\u05e1. \u05d0\u05e4\u05e9\u05e8 \u05e2\u05d6\u05e8\u05d4?",
+    "expected_specialist": "account",
+    "expected_tool": "lookup_user",
+    "expected_args": {},
+    "expected_outcome": "account returned"
+  },
+  {
+    "ticket_id": 148,
+    "customer_id": 184,
+    "subject": "Vague",
+    "body": "Help, nothing works.",
+    "expected_specialist": "escalation",
+    "expected_tool": "create_ticket",
+    "expected_args": {
+      "subject": "Vague request - nothing works",
+      "body": "Help, nothing works."
+    },
+    "expected_outcome": "escalated"
+  },
+  {
+    "ticket_id": 149,
+    "customer_id": 15,
+    "subject": "File bug",
+    "body": "The export button crashes with a 500 error.",
+    "expected_specialist": "technical",
+    "expected_tool": "create_bug_ticket",
+    "expected_args": {
+      "title": "export crashes",
+      "description": "500 on export"
+    },
+    "expected_outcome": "bug ticket created"
+  },
+  {
+    "ticket_id": 150,
+    "customer_id": 192,
+    "subject": "Invoice inquiry",
+    "body": "Can you send me a copy of invoice #500?",
+    "expected_specialist": "billing",
+    "expected_tool": "get_invoice",
+    "expected_args": {
+      "invoice_id": 500
+    },
+    "expected_outcome": "invoice returned"
+  }
+]

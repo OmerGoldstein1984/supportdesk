@@ -1,0 +1,73 @@
+[project]
+name = "supportdesk"
+version = "0.1.0"
+description = "Production-grade multi-agent customer support system (LangChain v1 + LangGraph)"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "langchain>=0.3.0,<0.4.0",
+    "langchain-core>=0.3.0,<0.4.0",
+    "langgraph>=0.2.0,<0.6.0",
+    "langchain-nvidia-ai-endpoints>=0.2.0,<0.4.0",
+    "fastapi>=0.115.0,<0.116.0",
+    "uvicorn[standard]>=0.30.0,<0.32.0",
+    "pydantic>=2.10.0,<3.0.0",
+    "sqlalchemy>=2.0.36,<2.1.0",
+    "psycopg2-binary>=2.9.0,<3.0.0",
+    "python-dotenv>=1.0.0,<1.1.0",
+    "pydantic-settings>=2.3.0,<3.0.0",
+    "tenacity>=8.4.0,<9.0.0",
+    "structlog>=24.0.0,<25.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0,<9.0.0",
+    "pytest-asyncio>=0.24.0,<0.25.0",
+    "httpx>=0.27.0,<0.28.0",
+    "ruff>=0.8.0,<0.9.0",
+    "mypy>=1.11.0,<2.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "B", "I"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "unit: fast, no network, fake LLM",
+    "integration: agents + tools + real database + FastAPI TestClient",
+    "e2e: full HTTP scenarios against a running server",
+    "eval: labeled ticket corpus, routing/tool accuracy, LLM-as-judge",
+]
+
+[tool.coverage.run]
+source = ["supportdesk"]
+omit = [
+    "src/supportdesk/evals/*",
+    "src/supportdesk/scripts/*",
+    "src/supportdesk/cli.py",
+    "src/supportdesk/_ormsgpack_shim.py",
+]
+
+[tool.coverage.report]
+fail_under = 85
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+]
