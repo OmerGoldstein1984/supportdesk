@@ -9,8 +9,8 @@ from __future__ import annotations
 from typing import Any, Iterator, cast
 
 import pytest  # noqa: E402
-from sqlalchemy import delete
-from sqlalchemy.orm import Session
+from sqlalchemy import StaticPool, create_engine, delete
+from sqlalchemy.orm import Session, sessionmaker
 
 from supportdesk import llm as llm_mod  # noqa: E402
 from supportdesk import models  # noqa: E402
@@ -70,13 +70,31 @@ def _clear_tables(session: Session) -> None:
 
 @pytest.fixture(scope="session", autouse=True)
 def _db_schema() -> Iterator[None]:
+    """Create the schema once per session on a hermetic in-memory SQLite DB.
+
+    The default ``test.db`` is a shared file that persisted rows between runs
+    (stale customer/invoice ids caused flaky primary-key conflicts on re-runs).
+    We bind the module engine/session to a fresh ``sqlite:///:memory:`` database
+    (StaticPool so every connection shares the same in-memory DB) so each test
+    session starts empty and nothing is written to disk.
+    """
+    import supportdesk.database as database
+
+    test_engine = create_engine(
+        "sqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+    database._engine = test_engine
+    database.SessionLocal = sessionmaker(bind=test_engine, autoflush=False, autocommit=False)
     init_db()
     yield
 
 
 @pytest.fixture
 def db_session() -> Iterator[Session]:
-    """A SQLAlchemy session backed by test.db, cleaned after each test."""
+    """A SQLAlchemy session backed by the hermetic in-memory test DB, cleaned
+    after each test so tests never leak state into one another."""
     with session_scope() as session:
         yield session
     with session_scope() as session:
