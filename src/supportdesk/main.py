@@ -8,14 +8,21 @@ Endpoints:
 
 from __future__ import annotations
 
-from typing import Any
+import time
+from collections import defaultdict
+from collections.abc import Callable
+from typing import Any, Awaitable
 
-from fastapi import Depends, FastAPI, Header
+from fastapi import Depends, FastAPI, Header, Request, Response
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from .config import settings
 from .database import init_db
 from .graph import ApprovalDecision, get_graph, resume, run
 from .logging import configure_logging, get_logger
+
+RATE_LIMIT_REQUESTS = 30
+RATE_LIMIT_WINDOW_SECONDS = 60
 
 configure_logging(settings.log_level)
 logger = get_logger("supportdesk")
@@ -33,6 +40,49 @@ def get_current_customer_id(x_customer_id: int = Header(alias="X-Customer-Id")) 
     to this customer, so the repository layer never returns another customer's data.
     """
     return x_customer_id
+
+
+class RateLimitMiddleware(BaseHTTPMiddleware):
+    """Fixed-window rate limiter keyed by X-Customer-Id.
+
+    Protects the LLM-heavy /chat endpoint from abuse: every chat triggers router
+    + specialist + critic LLM calls, so an unbounded client can run up cost.
+    In production this would be Redis-backed and distributed; here it is
+    in-memory and per-process, adequate for a single-instance demo.
+    """
+
+    def __init__(
+        self,
+        app: Any,
+        limit: int = RATE_LIMIT_REQUESTS,
+        window_seconds: int = RATE_LIMIT_WINDOW_SECONDS,
+    ) -> None:
+        super().__init__(app)
+        self.limit = limit
+        self.window_seconds = window_seconds
+        self._windows: dict[str, list[float]] = defaultdict(list)
+
+    async def dispatch(
+        self, request: Request, call_next: Callable[[Request], Awaitable[Response]]
+    ) -> Response:
+        if request.url.path != "/chat":
+            return await call_next(request)
+        customer_id = request.headers.get("x-customer-id", "anonymous")
+        now = time.time()
+        cutoff = now - self.window_seconds
+        window = self._windows[customer_id]
+        self._windows[customer_id] = [t for t in window if t > cutoff]
+        if len(self._windows[customer_id]) >= self.limit:
+            return Response(
+                "Rate limit exceeded. Try again later.",
+                status_code=429,
+                headers={"Retry-After": str(self.window_seconds)},
+            )
+        self._windows[customer_id].append(now)
+        return await call_next(request)
+
+
+app.add_middleware(RateLimitMiddleware)
 
 
 from pydantic import BaseModel  # noqa: E402

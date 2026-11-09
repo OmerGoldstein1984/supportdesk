@@ -3,7 +3,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from supportdesk.main import app
+from supportdesk.main import RATE_LIMIT_REQUESTS, app
 
 pytestmark = pytest.mark.integration
 
@@ -128,3 +128,28 @@ def test_chat_requires_auth_header(monkeypatch, seeded_db):
         # deliberately no X-Customer-Id header
     )
     assert r.status_code == 422, "missing auth header must be rejected"
+
+
+def test_rate_limit_blocks_excess_requests(monkeypatch, seeded_db):
+    """Rate limit: beyond the per-minute per-customer limit, /chat returns 429.
+
+    Characterization (before this fix): /chat had NO rate limit, so 35 rapid
+    calls all returned 200 (see the now-removed test_chat_has_no_rate_limit_yet).
+    Now the first 30 return 200 and calls 31-35 return 429, proving abusive
+    clients are throttled instead of running up LLM cost."""
+    _install(monkeypatch)
+    client = TestClient(app)
+    statuses = []
+    for i in range(35):
+        r = client.post(
+            "/chat",
+            json={
+                "conversation_id": f"c_rl_{i}",
+                "customer_id": 999,
+                "message": "hi",
+            },
+            headers={"X-Customer-Id": "999"},
+        )
+        statuses.append(r.status_code)
+    assert statuses.count(200) == RATE_LIMIT_REQUESTS
+    assert statuses.count(429) == 35 - RATE_LIMIT_REQUESTS
