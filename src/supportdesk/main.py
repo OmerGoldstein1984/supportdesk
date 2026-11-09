@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI, Header
 
 from .config import settings
 from .database import init_db
@@ -21,6 +21,19 @@ configure_logging(settings.log_level)
 logger = get_logger("supportdesk")
 
 app = FastAPI(title="SupportDesk", version="0.1.0")
+
+
+def get_current_customer_id(x_customer_id: int = Header(alias="X-Customer-Id")) -> int:
+    """Resolve the caller's identity from a server-trusted header.
+
+    The request body's ``customer_id`` is *not* trusted: a client can spoof it to
+    read another customer's invoices, tickets, and refunds. ``X-Customer-Id`` is
+    the authoritative caller identity (a stand-in for a signed session token / JWT
+    in production) and is required on the chat endpoint. The graph is then scoped
+    to this customer, so the repository layer never returns another customer's data.
+    """
+    return x_customer_id
+
 
 from pydantic import BaseModel  # noqa: E402
 
@@ -58,8 +71,11 @@ def _startup() -> None:
 
 
 @app.post("/chat", response_model=ChatResponse)
-def chat(req: ChatRequest) -> ChatResponse:
-    result = run(req.conversation_id, req.customer_id, req.message)
+def chat(
+    req: ChatRequest,
+    current_customer_id: int = Depends(get_current_customer_id),
+) -> ChatResponse:
+    result = run(req.conversation_id, current_customer_id, req.message)
     snapshot = get_graph().get_state({"configurable": {"thread_id": req.conversation_id}})
     if snapshot.next:
         interrupt_value = snapshot.interrupts[0].value if snapshot.interrupts else {}

@@ -37,7 +37,11 @@ def _install(monkeypatch, responses=None):
 def test_chat_complete(monkeypatch, seeded_db):
     _install(monkeypatch)
     client = TestClient(app)
-    r = client.post("/chat", json={"conversation_id": "c1", "customer_id": 1, "message": "hi"})
+    r = client.post(
+        "/chat",
+        json={"conversation_id": "c1", "customer_id": 1, "message": "hi"},
+        headers={"X-Customer-Id": "1"},
+    )
     assert r.status_code == 200
     body = r.json()
     assert body["status"] == "complete"
@@ -64,7 +68,9 @@ def test_chat_awaits_approval_then_resume(monkeypatch, seeded_db):
     )
     client = TestClient(app)
     r = client.post(
-        "/chat", json={"conversation_id": "c2", "customer_id": 1, "message": "refund $250"}
+        "/chat",
+        json={"conversation_id": "c2", "customer_id": 1, "message": "refund $250"},
+        headers={"X-Customer-Id": "1"},
     )
     assert r.status_code == 200
     body = r.json()
@@ -86,7 +92,9 @@ def test_chat_awaits_approval_then_resume(monkeypatch, seeded_db):
         FakeResp("pending", tool_calls=[]),
     ]
     r3 = client.post(
-        "/chat", json={"conversation_id": "c3", "customer_id": 1, "message": "refund $250"}
+        "/chat",
+        json={"conversation_id": "c3", "customer_id": 1, "message": "refund $250"},
+        headers={"X-Customer-Id": "1"},
     )
     assert r3.json()["status"] == "awaiting_approval"
     r4 = client.post("/approve", json={"conversation_id": "c3", "approve": False, "note": "nope"})
@@ -96,7 +104,27 @@ def test_chat_awaits_approval_then_resume(monkeypatch, seeded_db):
 def test_trace_endpoint(monkeypatch, seeded_db):
     _install(monkeypatch)
     client = TestClient(app)
-    client.post("/chat", json={"conversation_id": "c4", "customer_id": 1, "message": "hi"})
+    client.post(
+        "/chat",
+        json={"conversation_id": "c4", "customer_id": 1, "message": "hi"},
+        headers={"X-Customer-Id": "1"},
+    )
     r = client.get("/trace/c4")
     assert r.status_code == 200
     assert r.json()["conversation_id"] == "c4"
+
+
+def test_chat_requires_auth_header(monkeypatch, seeded_db):
+    """Security: /chat must require an X-Customer-Id header.
+
+    The body's customer_id is no longer trusted (a client could spoof it to read
+    another customer's invoices, tickets, and refunds). A request with no auth
+    header is rejected instead of being allowed to impersonate any customer."""
+    _install(monkeypatch)
+    client = TestClient(app)
+    r = client.post(
+        "/chat",
+        json={"conversation_id": "c_auth", "customer_id": 99, "message": "hi"},
+        # deliberately no X-Customer-Id header
+    )
+    assert r.status_code == 422, "missing auth header must be rejected"
