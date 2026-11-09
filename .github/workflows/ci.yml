@@ -54,7 +54,7 @@ jobs:
       - name: Seed test data (SQLite)
         run: DATABASE_URL=sqlite:///./test.db python -m supportdesk.cli seed
       - name: Unit + integration tests (fake LLM, sqlite)
-        run: DATABASE_URL=sqlite:///./test.db pytest -m "unit or integration" -q --cov=supportdesk --cov-report=xml --cov-report=term -p no:cacheprovider
+        run: DATABASE_URL=sqlite:///./test.db pytest -m "unit or integration" -q --cov=supportdesk --cov-fail-under=85 --cov-report=xml --cov-report=term -p no:cacheprovider
       - name: Eval regression gate (sample)
         run: DATABASE_URL=sqlite:///./test.db python -m supportdesk.evals.cli run --sample --baseline
       - name: Upload coverage
