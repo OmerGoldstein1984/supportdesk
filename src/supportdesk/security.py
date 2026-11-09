@@ -26,13 +26,41 @@ _INJECTION_PATTERNS = [
     re.compile(r"pretend\s+to\s+be", re.I),
 ]
 
+# Compacted (whitespace-free, lowercase) injection signatures that catch
+# obfuscated attempts where the attacker inserts spaces between letters
+# ("i g n o r e   previous instructions") or varies casing. Checked in
+# addition to the regex patterns above as defense in depth.
+_INJECTION_SIGNATURES = (
+    "ignorepreviousinstructions",
+    "disregardthe",
+    "disregardabove",
+    "disregardprior",
+    "youareanowa",
+    "youareanowan",
+    "system:",
+    "revealthesystemprompt",
+    "revealsystemprompt",
+    "jailbreak",
+    "overridesafety",
+    "pretendtobe",
+)
+
 
 class InjectionBlocked(ValueError):
     """Raised when user input or a tool output contains a prompt-injection attempt."""
 
 
 def _contains_injection(text: str) -> bool:
-    return any(pattern.search(text) for pattern in _INJECTION_PATTERNS)
+    if any(pattern.search(text) for pattern in _INJECTION_PATTERNS):
+        return True
+    normalized = _normalize(text)
+    return any(sig in normalized for sig in _INJECTION_SIGNATURES)
+
+
+def _normalize(text: str) -> str:
+    """Lowercase and remove all whitespace so spaced-out obfuscation collapses
+    to a matchable signature."""
+    return re.sub(r"\s+", "", text).lower()
 
 
 def _redact_pii(text: str) -> str:
