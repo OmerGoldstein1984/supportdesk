@@ -8,7 +8,7 @@ customer can never read another customer's invoices, tickets, or account data.
 from __future__ import annotations
 
 import enum
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlalchemy import (
@@ -60,7 +60,7 @@ class Customer(Base):
     email: Mapped[str] = mapped_column(String(200), unique=True, nullable=False)
     phone: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     state: Mapped[AccountState] = mapped_column(Enum(AccountState), default=AccountState.ACTIVE)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     invoices = relationship("Invoice", back_populates="customer", cascade="all, delete-orphan")
     tickets = relationship("Ticket", back_populates="customer", cascade="all, delete-orphan")
@@ -89,7 +89,7 @@ class Subscription(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     customer_id: Mapped[int] = mapped_column(ForeignKey("customers.id"), nullable=False)
     plan_id: Mapped[int] = mapped_column(ForeignKey("plans.id"), nullable=False)
-    start_date: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    start_date: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     end_date: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
     status: Mapped[str] = mapped_column(String(50), default="active")
 
@@ -122,7 +122,7 @@ class PaymentFailure(Base):
     invoice_id: Mapped[Optional[int]] = mapped_column(ForeignKey("invoices.id"), nullable=True)
     amount: Mapped[float] = mapped_column(Numeric(12, 2), nullable=False)
     reason: Mapped[str] = mapped_column(String(200), default="")
-    failed_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    failed_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     customer = relationship("Customer", back_populates="payment_failures")
 
@@ -136,7 +136,7 @@ class Ticket(Base):
     body: Mapped[str] = mapped_column(Text, nullable=False)
     status: Mapped[TicketStatus] = mapped_column(Enum(TicketStatus), default=TicketStatus.OPEN)
     specialist: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     customer = relationship("Customer", back_populates="tickets")
 
@@ -149,7 +149,7 @@ class Article(Base):
     content: Mapped[str] = mapped_column(Text, nullable=False)
     category: Mapped[str] = mapped_column(String(100), default="general")
     is_outdated: Mapped[bool] = mapped_column(Boolean, default=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 
 class ServiceIncident(Base):
@@ -161,5 +161,5 @@ class ServiceIncident(Base):
         Enum(IncidentStatus), default=IncidentStatus.HEALTHY
     )
     region: Mapped[str] = mapped_column(String(100), default="global")
-    started_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    started_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     resolved_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)

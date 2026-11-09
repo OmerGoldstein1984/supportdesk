@@ -25,7 +25,7 @@ import json
 import os
 import random
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from supportdesk import models
 from supportdesk.database import init_db, session_scope
@@ -353,7 +353,7 @@ ADVERSARIAL = [
 
 
 def _random_date(days_back: int = 365) -> datetime:
-    return datetime.utcnow() - timedelta(
+    return datetime.now(timezone.utc) - timedelta(
         days=random.randint(0, days_back), hours=random.randint(0, 23)
     )
 

@@ -8,7 +8,7 @@ data" at the data layer (not just in the LLM).
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from sqlalchemy.orm import Session
@@ -65,7 +65,7 @@ class InvoiceRepository:
 
     def mark_paid(self, invoice: models.Invoice) -> None:
         invoice.status = models.InvoiceStatus.PAID
-        invoice.paid_at = datetime.utcnow()
+        invoice.paid_at = datetime.now(timezone.utc)
         self.session.add(invoice)
 
 
@@ -114,7 +114,7 @@ class PaymentFailureRepository:
         self.session = session
 
     def recent_for_customer(self, customer_id: int, days: int = 30) -> list[models.PaymentFailure]:
-        cutoff = datetime.utcnow() - timedelta(days=days)
+        cutoff = datetime.now(timezone.utc) - timedelta(days=days)
         return (
             self.session.query(models.PaymentFailure)
             .filter(

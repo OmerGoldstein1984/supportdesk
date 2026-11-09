@@ -102,3 +102,23 @@ def test_incident_status(repos):
     }
     active = repos.incidents.active_incidents()
     assert isinstance(active, list)
+
+
+def test_mark_paid_sets_timezone_aware_paid_at(repos):
+    """Characterization: mark_paid must set paid_at as timezone-aware.
+
+    datetime.utcnow() is deprecated (Python 3.12+) and produces naive
+    datetimes; this test pins the bug: it fails on the current
+    implementation and passes once we switch to datetime.now(timezone.UTC).
+    """
+    customer = repos.customers.create("TZ User", "tz@example.com")
+    invoice = models.Invoice(
+        customer_id=customer.id,
+        amount=10.00,
+        status=models.InvoiceStatus.OVERDUE,
+    )
+    repos.session.add(invoice)
+    repos.session.flush()
+    repos.invoices.mark_paid(invoice)
+    assert invoice.paid_at is not None
+    assert invoice.paid_at.tzinfo is not None
