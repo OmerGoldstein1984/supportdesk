@@ -9,8 +9,14 @@ services:
       - DATABASE_URL=postgresql+psycopg2://supportdesk:supportdesk@db:5432/supportdesk
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
     entrypoint: ["sh", "/app/scripts/entrypoint.sh"]
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/trace/health-check')\" || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   db:
     image: postgres:15-alpine
@@ -22,6 +28,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U supportdesk -d supportdesk"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
