@@ -1,9 +1,25 @@
 """Structured JSON logging with PII redaction.
 
-Logs are emitted as JSON (one event per line) so they can be consumed by
-log collectors. A processor scrubs PII (emails, phones, card numbers) from
-any value before it reaches the log sink, so sensitive customer data never
-lands in plain-text logs.
+WHAT: Structlog configuration that emits JSON logs (one event per line). A
+processor scrubs PII (emails, phones, card numbers, SSNs) from any value before
+it reaches the log sink — so sensitive customer data never lands in plain-text
+logs.
+
+WHY: PII must never reach logs. The PII processor runs on every log event,
+scrubbing sensitive data before it is written. This is defense in depth: even if
+some code logs customer data, it is redacted before being written.
+
+INPUTS: log values (strings, dicts, lists).
+OUTPUTS: JSON log lines with PII redacted.
+
+FAILURE MODES:
+- Non-string values are returned unchanged (no redaction for non-strings)
+- Regex patterns are approximate — international phones/cards may slip through
+
+# BUSINESS: PII leaking into logs is a privacy/compliance incident; redaction
+#   must never be disabled.
+# INTERVIEW: "Why redact tool output as well as user input?" Answer: Defense in
+#   depth — a tool output may contain customer records.
 """
 
 from __future__ import annotations

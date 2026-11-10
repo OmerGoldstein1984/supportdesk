@@ -1,4 +1,30 @@
-"""Technical tools: search_knowledge_base, get_service_status, create_bug_ticket."""
+"""Technical tools: search_knowledge_base, get_service_status, create_bug_ticket.
+
+WHAT: Factory producing the three technical-agent tools. All read-only or
+ticket-creating; none mutate billing state.
+
+WHY: Technical agent is scoped to KB search, service status, and bug tickets —
+it cannot touch invoices, refunds, or plans. Separation of duties: billing
+specialist handles money, technical specialist handles how-to/errors/bugs.
+
+INPUTS: ToolContext.
+OUTPUTS: dict of {tool_name: LangChain tool}.
+
+AGENT TOOLS:
+- search_knowledge_base: read-only KB search, returns article snippets flagging
+  outdated articles
+- get_service_status: read-only service health, no args
+- create_bug_ticket: creates a support ticket with specialist="technical"
+
+FAILURE MODES:
+- search_knowledge_base: no articles matched → "No knowledge-base articles..."
+- create_bug_ticket: creates ticket with specialist="technical"
+
+# BUSINESS: KB articles include outdated ones flagged for citation — agents must
+#   cite titles and flag outdated articles.
+# INTERVIEW: "Why is search_knowledge_base limited to 3 articles?" Answer: keeps
+#   LLM context small and citation manageable.
+"""
 
 from __future__ import annotations
 

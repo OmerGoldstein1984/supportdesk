@@ -1,4 +1,31 @@
-"""Account tools: lookup_user, send_password_reset."""
+"""Account tools: lookup_user, send_password_reset.
+
+WHAT: Factory producing the two account-agent tools. Both are self-service — the
+customer looks up their own account or requests a password reset to their own
+email.
+
+WHY: Account tools are scoped to the current customer only. send_password_reset
+returns a confirmation string but does not actually send an email (stubbed for
+demo).
+
+INPUTS: ToolContext.
+OUTPUTS: dict of {tool_name: LangChain tool}.
+
+AGENT TOOLS:
+- lookup_user: read-only account lookup, scoped to current customer
+- send_password_reset: returns confirmation string (no email actually sent)
+
+FAILURE MODES:
+- lookup_user: customer not found → "Account not found."
+- send_password_reset: customer not found → "Cannot send reset: account not found."
+
+# BUSINESS: Account data is customer-scoped — a customer can only look up their
+#   own account, enforced by repos.customers.get customer scoping.
+# INTERVIEW: "Why does send_password_reset not actually send an email?" Answer:
+#   Stubbed for demo; in production would call an email gateway.
+# INTERVIEW: "Why does lookup_user take no args?" Answer: It uses ctx.customer_id
+#   from the authenticated session — no customer_id arg needed from the user.
+"""
 
 from __future__ import annotations
 

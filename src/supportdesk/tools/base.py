@@ -1,10 +1,36 @@
 """Shared base for all SupportDesk LangChain tools.
 
-Every tool is produced by a factory that binds a :class:`ToolContext` (current
-customer, conversation, session factory). Tool execution always passes through
-the plain-code :class:`~supportdesk.tool_gate.ToolGate`, which enforces the
-per-agent allowlist, Pydantic v2 schema validation, customer scoping, and the
-refund risk policy.
+WHAT: ToolContext dataclass (session_factory, customer_id, conversation_id) and
+execute() — the universal wrapper every tool runs through. Every call passes
+tool_gate.validate() before any business logic — returns result string or a
+BLOCKED:/APPROVAL_REQUIRED: marker that the agent layer interprets.
+
+WHY: Single choke point where all tool execution is authorized. Every LangChain
+tool funnels through execute(), so the tool gate is the single place where
+allowlist, schema validation, and risk policy are enforced.
+
+WHY: Defense in depth — the tool gate is middleware that every tool call must
+pass. It keeps tool execution fully controllable and easy to explain in an
+interview.
+
+INPUTS: ToolContext, agent name, tool name, args dict, fn callable.
+OUTPUTS: result string, or "BLOCKED:"/"APPROVAL_REQUIRED:" marker string.
+
+FAILURE MODES:
+- tool not allowlisted → "BLOCKED: {tool_name} is not allowlisted for the {agent} agent"
+- args fail schema validation → "BLOCKED: schema validation failed..."
+- fn raises exception → propagates uncaught out of execute()
+- requires_approval → returns APPROVAL_REQUIRED marker, graph pauses for human
+
+# GAP: customer_id=None default in validate() weakens scoping if caller omits it
+# BUSINESS: Separation of duties via allowlists is a SOC2/ISO 27001-style control:
+#   billing clerks can't reprovision SIMs, technical staff can't refund invoices
+# INTERVIEW: "Why is the gate a class with state (validation_failures) instead of
+#   a pure function?" Answer: so we can count repeated validation failures per
+#   conversation and trip a circuit.
+# INTERVIEW: "Why does execute() return a marker string instead of raising?"
+#   Answer: So the agent layer can interpret the result — BLOCKED means the tool
+#   didn't run, APPROVAL_REQUIRED means the graph pauses for human approval.
 """
 
 from __future__ import annotations

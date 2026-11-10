@@ -1,7 +1,30 @@
 """Pydantic v2 typed argument schemas for every LangChain tool.
 
-Each tool receives a validated Pydantic model; the tool gate validates incoming
-arguments against the matching schema before any repository or LLM call.
+WHAT: Typed Pydantic models for every tool's arguments. The tool gate validates
+incoming arguments against the matching schema before any repository or LLM call.
+
+WHY: Input validation at the system boundary — every tool call is validated
+against its Pydantic schema before any repository or LLM call. This is defense
+in depth: even if the LLM sends malformed arguments, they are rejected before
+touching the database.
+
+INPUTS: tool name + args dict.
+OUTPUTS: validated Pydantic model instance.
+
+FAILURE MODES:
+- Pydantic ValidationError — must be caught by tool gate and turned into
+  user-friendly error
+- float for monetary amounts (IssueRefundArgs.amount) — floating-point rounding
+  edge cases on financial data
+
+# GAP: no customer_id field on tool schemas — scoping happens in repositories,
+#   not validated at schema boundary
+# GAP: no money type (Decimal, not float)
+# GAP: no upper bound on text fields — huge body could DoS
+# BUSINESS: Refund auto-approve threshold configured separately in config.py —
+#   schema doesn't enforce it
+# INTERVIEW: "Where does customer_id come from if it's not in the schemas?"
+#   Answer: X-Customer-Id header (see main.py config.py)
 """
 
 from __future__ import annotations

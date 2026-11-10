@@ -1,7 +1,32 @@
 """Application configuration, loaded from environment variables.
 
-All settings are environment-based. No secrets are stored in code.
-Copy ``.env.example`` to ``.env`` and fill in real values before running.
+WHAT: Pydantic-settings BaseSettings that loads all config from env vars (.env
+file). No secrets stored in code.
+
+WHY: All settings are environment-based — the same image runs dev/staging/prod
+with different env values. No secrets in code (copy .env.example to .env and fill
+in real values before running).
+
+INPUTS: environment variables (.env file).
+OUTPUTS: Settings singleton with all config fields.
+
+FAILURE MODES:
+- missing nvidia_api_key → LLM calls fail at runtime (no validation that key is
+  present when needed)
+- extra="ignore" silently drops mistyped env var names — typo in DATABASE_URL
+  won't error, just ignored, leading to confusing "using default SQLite" behavior
+- settings instantiated at import — env must be loaded before import; tests
+  mutating env need re-instantiation
+
+# GAP: no required-field enforcement (nvidia_api_key optional)
+# GAP: no validation of threshold ranges (refund threshold could be negative)
+# GAP: app_env and log_level unused in these files
+# BUSINESS: Refund auto-approve threshold is a business lever — finance should
+#   own it, not code
+# INTERVIEW: "How do you rotate NVIDIA API key without redeploying?" Answer:
+#   Env var — no code change needed
+# INTERVIEW: "How is router_confidence computed and by whom?" Answer: It's a
+#   config threshold; the router LLM sets confidence per-message
 """
 
 from pydantic import Field

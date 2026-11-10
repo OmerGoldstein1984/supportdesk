@@ -1,4 +1,29 @@
-"""Specialist agent system prompts and factory."""
+"""Specialist agent system prompts and factory.
+
+WHAT: Factory that builds per-domain specialist functions (billing/technical/account/
+escalation). Each specialist gets its own system prompt and an allowlisted tool set
+via tools_for(agent). Returns a callable (message) -> SpecialistResult.
+
+WHY: Each specialist is bound to only its own domain tools — a billing agent can
+never call technical tools. This per-agent allowlist is the core authorization
+mechanism enforced by the tool gate.
+
+INPUTS: agent name, ToolContext (session, customer_id, conversation_id).
+OUTPUTS: Callable that takes a message string and returns a SpecialistResult.
+
+FAILURE MODES:
+- tools_for(agent) could raise if agent name is unknown — guarded upstream by
+  graph.py which narrows intent to {billing, technical, account, escalation}
+- tools_for(agent)(context) could raise — propagates to specialist_node and
+  crashes the graph (no try/except in specialist_node, unlike router_node)
+
+# GAP: New intent added to RouterOutput without a corresponding prompt here would
+#   crash at specialist creation time.
+# BUSINESS: Separation of duties via allowlists is a SOC2/ISO 27001-style control:
+#   billing clerks can't reprovision SIMs, technical staff can't refund invoices.
+# INTERVIEW: "Why does each specialist get its own system prompt?" Answer: domain
+#   specialization — each agent should only know about its domain tools and policies.
+"""
 
 from typing import Callable
 

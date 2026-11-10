@@ -3,6 +3,24 @@
 Usage:
     python -m supportdesk.cli seed
     python -m supportdesk.cli serve
+
+WHAT: CLI with two commands: seed (reproducible synthetic test data) and serve
+(FastAPI API via uvicorn).
+
+WHY: Single command to get the system running — seed test data, then serve the
+API. The seed command is idempotent (re-running skips existing rows).
+
+INPUTS: CLI args (seed|serve).
+OUTPUTS: Console output; running API server.
+
+FAILURE MODES:
+- Missing command → prints usage and exits with code 1
+- Seed fails → database error propagates
+
+# BUSINESS: One command to get the system running — seed data, then serve the
+#   API. Good for demo/interview scenarios.
+# INTERVIEW: "Why is seed idempotent?" Answer: Re-running skips existing rows,
+#   so it's safe to run multiple times.
 """
 
 from __future__ import annotations

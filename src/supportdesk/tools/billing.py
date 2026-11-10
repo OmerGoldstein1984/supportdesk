@@ -1,6 +1,40 @@
 """Billing tools: get_invoice, issue_refund, change_plan.
 
-The billing agent is allowlisted for exactly these three tools.
+WHAT: Factory producing the three billing-agent tools. Each tool is a LangChain
+@tool with a Pydantic v2 args schema; every call passes through execute() which
+runs the tool gate.
+
+WHY: The billing agent is allowlisted for exactly these three tools — it can
+never call a technical or account tool. This is separation of duties, a SOC2/
+ISO 27001-style control.
+
+WHY: Invoices, refunds, and plan changes are customer data. The repository layer
+scopes every read/write by customer_id — a customer can never read another
+customer's invoices.
+
+INPUTS: ToolContext (session_factory, customer_id, conversation_id).
+OUTPUTS: dict of {tool_name: LangChain tool}.
+
+AGENT TOOLS:
+- get_invoice: read-only invoice lookup, scoped to current customer
+- issue_refund: refund an invoice; above threshold returns APPROVAL_REQUIRED
+- change_plan: switch customer to a different plan; mutates subscription
+
+FAILURE MODES:
+- issue_refund: above refund_auto_approve_threshold ($100) → APPROVAL_REQUIRED
+  marker → graph pauses for human approval
+- change_plan: plan not found → "Plan '{name}' not found."
+- get_invoice: not found/other customer → "Invoice not found or not accessible"
+
+# GAP: issue_refund returns "approved and processed" but does NOT actually
+#   persist a refund — stubbed for demo (see tools/base.py analysis)
+# BUSINESS: Refunds above auto-approve threshold ($100) require human approval —
+#   compliance control, business tunes the threshold without code changes
+# INTERVIEW: "Why does issue_refund not actually refund?" Answer: It's stubbed
+#   for the demo; in production it would call a payment gateway with idempotency
+#   keys to prevent double-refunds.
+# INTERVIEW: "Why > instead of >= for the refund threshold?" Answer: amount
+#   exactly at threshold auto-approves — boundary bug for testing.
 """
 
 from __future__ import annotations
@@ -15,6 +49,20 @@ from .base import ToolContext, execute
 
 
 def _invoice_text(inv: Any) -> str:
+    """Format an invoice for display to the customer.
+
+    WHAT: Formats invoice id, amount, status, due date into a readable string.
+    Handles None gracefully.
+
+    WHY: Consistent invoice display across the billing agent; guards against
+    None invoice (not found or not accessible).
+
+    INPUTS: inv (Invoice or None).
+    OUTPUTS: formatted string.
+
+    # BUSINESS: Invoice amounts and statuses are customer data — only shown to
+    #   the owning customer (enforced by repos.invoices.get customer scoping).
+    """
     if inv is None:
         return "Invoice not found or not accessible by your account."
     return (

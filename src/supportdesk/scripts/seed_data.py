@@ -1,21 +1,28 @@
 """Seed reproducible synthetic test data for SupportDesk.
 
-One command::
+WHAT: Creates reproducible synthetic test data with a fixed random seed (every
+run identical): plans, customers, invoices, subscriptions, payment failures,
+tickets, knowledge-base articles, service incidents. Writes labeled_tickets.json,
+adversarial.json, kb_articles.json for evals.
 
-    python -m supportdesk.cli seed
+WHY: Reproducible test data is essential for deterministic tests and evals.
+Every seed run is identical (SEED=42), so test results are stable across runs.
+Idempotent: re-running skips existing rows.
 
-Creates, with a fixed random seed (every run identical):
-  * 5 plans
-  * 200 customers (active / locked / unverified)
-  * 600 invoices (paid / overdue / disputed)
-  * subscription history + payment failures
-  * 150+ labeled support tickets (expected specialist / tool / args / outcome)
-  * 40-60 knowledge-base articles (some outdated / conflicting)
-  * scripted service incidents (outage / degraded / healthy)
-  * data/adversarial.json and data/labeled_tickets.json for evals
+INPUTS: CLI args (--reset to clear and re-seed).
+OUTPUTS: database rows + data files (labeled_tickets.json, adversarial.json,
+kb_articles.json).
 
-Idempotent: re-running skips existing rows. Pass --reset to clear and re-seed.
-No real personal data is used (emails are @example.com).
+FAILURE MODES:
+- Duplicate email → IntegrityError (caught? no — caller must handle)
+- Missing data directory → os.makedirs creates it
+
+# BUSINESS: Reproducible seed data is essential for deterministic tests and evals.
+#   Every run is identical — test results are stable across runs.
+# INTERVIEW: "Why is seed idempotent?" Answer: Re-running skips existing rows,
+#   so it's safe to run multiple times.
+# INTERVIEW: "Why fixed random seed?" Answer: Every seed run is identical — test
+#   results are stable across runs.
 """
 
 from __future__ import annotations

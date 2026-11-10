@@ -1,9 +1,28 @@
 """LLM provider: NVIDIA Build API via ChatNVIDIA, with retry + model-fallback middleware.
 
-ChatNVIDIA itself has no built-in retry/fallback, so this module wraps it:
-- transient failures are retried with exponential backoff (tenacity)
-- if all retries fail, the request is retried once against the fallback model
-- the router uses structured output (Pydantic) for intent/urgency/confidence
+WHAT: Wraps ChatNVIDIA with tenacity retry (exponential backoff) and a single
+fallback model. If the primary model exhausts retries, the request is retried once
+against the fallback model. The router uses structured output (Pydantic) for
+intent/urgency/confidence.
+
+WHY: ChatNVIDIA has no built-in retry/fallback, so this module wraps it. Tenacity
+retries transient failures with exponential backoff; if all retries fail, the
+request is retried once against the fallback model. Resilience for LLM calls.
+
+INPUTS: input (str or Messages), schema (Pydantic model for structured output).
+OUTPUTS: LLM response (structured or raw).
+
+FAILURE MODES:
+- Primary model exhausted retries → try fallback model
+- Fallback also fails → exception propagates
+- Missing NVIDIA_API_KEY → LLM call fails at runtime
+
+# BUSINESS: Retries cost money and time; fallback model may be lower quality.
+#   The fallback equals the primary model — model outage affects both.
+# INTERVIEW: "Why no circuit breaker?" Answer: Not implemented yet; tenacity
+#   retry + single fallback is the current pattern.
+# INTERVIEW: "Why structured output for the router?" Answer: Constrains the LLM
+#   to return JSON matching the RouterOutput schema rather than free text.
 """
 
 from __future__ import annotations

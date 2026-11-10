@@ -4,6 +4,34 @@ Endpoints:
   POST /chat        - send a message, get a reply (or an approval request)
   POST /approve     - resume a paused human-in-the-loop refund approval
   GET  /trace/{id}  - inspect conversation state (for the interview demo)
+
+WHAT: FastAPI web app exposing three HTTP endpoints. The chat endpoint is the
+main entry point — it runs the supervisor graph with fake LLM in tests, real
+LLM in production. The approve endpoint resumes a paused human-in-the-loop
+refund approval. The trace endpoint inspects conversation state.
+
+WHY: The REST API is the user-facing entry point. /chat runs the supervisor
+graph (Router → specialist → Critic → reply), /approve resumes a paused
+human-in-the-loop refund approval, /trace inspects conversation state for the
+interview demo.
+
+INPUTS: HTTP requests with JSON bodies.
+OUTPUTS: JSON responses (ChatResponse, ApproveResponse).
+
+FAILURE MODES:
+- Missing X-Customer-Id header → 422 (header is required)
+- LLM failure → propagates as HTTP error
+- Graph interrupt → returns 200 with status="awaiting_approval" and interrupt
+  value
+
+# BUSINESS: /chat is the main customer-facing endpoint; /approve is the
+#   human-in-the-loop gate for refunds above threshold
+# INTERVIEW: "Why is customer_id from the header, not the body?" Answer: The
+#   body's customer_id is not trusted — a client could spoof it to read another
+#   customer's data. The header is authoritative.
+# INTERVIEW: "What happens if the graph is interrupted?" Answer: /chat returns
+#   200 with status="awaiting_approval" and the interrupt value; /approve
+#   resumes with the human's decision.
 """
 
 from __future__ import annotations
