@@ -1,0 +1,12 @@
+version: 2
+updates:
+  # Keep GitHub Actions and the Docker setup current.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  # Keep Python dependencies current (language, pip).
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"

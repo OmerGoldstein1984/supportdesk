@@ -77,10 +77,25 @@ class GateVerdict:
     validated_args: dict[str, Any] | None = None
 
 
+@dataclass
+class GateAuditEntry:
+    agent: str
+    tool_name: str
+    customer_id: int | None
+    conversation_id: str
+    allowed: bool
+    requires_approval: bool
+    reason: str
+
+
 class ToolGate:
     def __init__(self) -> None:
         # validation failure count per conversation id -> int
         self.validation_failures: dict[str, int] = {}
+        # Append-only audit of every gate decision. No edit/delete methods are
+        # provided here; production should ship these entries to a WORM/SIEM
+        # store so they cannot be altered after the fact.
+        self.audit_log: list[GateAuditEntry] = []
 
     def validate(
         self,
@@ -96,10 +111,12 @@ class ToolGate:
         # 1. Allowlist
         if tool_name not in allowed_tools:
             self._record_failure(conversation_id)
-            return GateVerdict(
+            verdict = GateVerdict(
                 allowed=False,
                 reason=f"{tool_name} is not allowlisted for the {agent} agent",
             )
+            self._record_audit(agent, tool_name, customer_id, conversation_id, verdict)
+            return verdict
 
         # 2. Schema validation
         schema = SCHEMAS.get(tool_name)
@@ -108,10 +125,12 @@ class ToolGate:
                 validated = schema.model_validate(args).model_dump()
             except ValidationError as exc:
                 self._record_failure(conversation_id)
-                return GateVerdict(
+                verdict = GateVerdict(
                     allowed=False,
                     reason=f"schema validation failed for {tool_name}: {exc}",
                 )
+                self._record_audit(agent, tool_name, customer_id, conversation_id, verdict)
+                return verdict
         else:
             validated = dict(args)
 
@@ -121,8 +140,10 @@ class ToolGate:
         verdict = self._risk_policy(tool_name, validated)
         if not verdict.allowed:
             self._record_failure(conversation_id)
+            self._record_audit(agent, tool_name, customer_id, conversation_id, verdict)
             return verdict
         verdict.validated_args = validated
+        self._record_audit(agent, tool_name, customer_id, conversation_id, verdict)
         return verdict
 
     def _risk_policy(self, tool_name: str, args: dict[str, Any]) -> GateVerdict:
@@ -142,6 +163,26 @@ class ToolGate:
     def _record_failure(self, conversation_id: str) -> None:
         self.validation_failures[conversation_id] = (
             self.validation_failures.get(conversation_id, 0) + 1
+        )
+
+    def _record_audit(
+        self,
+        agent: str,
+        tool_name: str,
+        customer_id: int | None,
+        conversation_id: str,
+        verdict: GateVerdict,
+    ) -> None:
+        self.audit_log.append(
+            GateAuditEntry(
+                agent=agent,
+                tool_name=tool_name,
+                customer_id=customer_id,
+                conversation_id=conversation_id,
+                allowed=verdict.allowed,
+                requires_approval=verdict.requires_approval,
+                reason=verdict.reason,
+            )
         )
 
     def failure_count(self, conversation_id: str = "default") -> int:

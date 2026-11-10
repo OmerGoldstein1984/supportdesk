@@ -142,8 +142,18 @@ class ApproveResponse(BaseModel):
     final_reply: str | None = None
 
 
+def _validate_settings() -> None:
+    """Fail loudly in production if required config is missing instead of failing mid-request."""
+    if settings.app_env == "production" and not settings.nvidia_api_key:
+        raise RuntimeError(
+            "NVIDIA_API_KEY is required in production. Copy .env.example to .env "
+            "and set it before starting the API."
+        )
+
+
 @app.on_event("startup")
 def _startup() -> None:
+    _validate_settings()
     init_db()
     logger.info("supportdesk_started", database_url=settings.database_url)
 
