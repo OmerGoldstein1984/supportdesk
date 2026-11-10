@@ -11,6 +11,12 @@ services:
       db:
         condition: service_healthy
     entrypoint: ["sh", "/app/scripts/entrypoint.sh"]
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/trace/health-check')\" || exit 1"]
       interval: 30s

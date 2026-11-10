@@ -20,6 +20,11 @@ COPY ./data ./data
 
 RUN pip install --no-cache-dir -e ".[dev]"
 
+# Run as a non-root user (defense in depth: limits impact of container escape)
+RUN useradd --create-home --shell /bin/bash supportdesk \
+    && chown -R supportdesk:supportdesk /app
+USER supportdesk
+
 EXPOSE 8000
 
 # Seed idempotently on startup, then serve. Seed is safe to re-run (skips existing rows).
