@@ -12,6 +12,7 @@ Two concerns, both enforced in plain code (no LLM):
 from __future__ import annotations
 
 import re
+import unicodedata
 
 __all__ = ["InjectionBlocked", "sanitize_user_input", "sanitize_tool_output", "redact_pii"]
 
@@ -58,8 +59,10 @@ def _contains_injection(text: str) -> bool:
 
 
 def _normalize(text: str) -> str:
-    """Lowercase and remove all whitespace so spaced-out obfuscation collapses
-    to a matchable signature."""
+    """Normalize unicode (NFKC), lowercase, and remove all whitespace so
+    obfuscated characters (fullwidth, zero-width, homoglyphs) and spaced-out
+    injection attempts collapse to matchable signatures."""
+    text = unicodedata.normalize("NFKC", text)
     return re.sub(r"\s+", "", text).lower()
 
 
