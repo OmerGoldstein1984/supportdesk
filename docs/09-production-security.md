@@ -81,6 +81,9 @@ exactly where it paused.
   shared across API replicas (`docs/08` limitation #2).
 - No expiry or notification wiring on pending approvals.
 
+**Open source database/checkpointer:** **PostgreSQL** (open source) — LangGraph's
+`PostgresSaver` persists conversation state durably.
+
 **Production fix:** Swap to a **Postgres-backed checkpointer** (`PostgresSaver`)
 so state is durable and shared across instances. Make `/approve` idempotent,
 add a pending-approval TTL, and wire approvals into an audit trail (who
@@ -119,6 +122,8 @@ inspection.
 
 ## 5. Authentication & identity (`src/supportdesk/main.py:61-70`)
 
+**Status:** Deferred — see Deferred items.
+
 **What exists:** `get_current_customer_id` resolves identity from the
 `X-Customer-Id` request header — it is **authoritative**. The request body's
 `customer_id` is explicitly **not trusted**: a client could spoof it to read
@@ -130,8 +135,17 @@ def get_current_customer_id(x_customer_id: int = Header(alias="X-Customer-Id")) 
     return x_customer_id
 ```
 
-**Prototype gap:** `X-Customer-Id` is a stand-in for a signed session token /
-JWT. There is no login, session, OAuth, or role layer (`docs/08` limitation #3).
+**Open source alternatives:** When you're ready to add real authN/authZ, these
+open source options are a good starting point:
+
+| Option | Type | Notes |
+|--------|------|-------|
+| **Keycloak** | Identity & access management | Self-hosted, OIDC/SAML, rich RBAC, mature |
+| **Authentik** | Identity provider | Flexible, Python/Django, good docs |
+| **Ory Kratos / Oathkeeper** | Identity & API auth | API-first, Go, cloud-native |
+| **Dex** | OIDC identity provider | Connects to other providers (LDAP, GitHub, SAML) |
+| **Authelia** | SSO + 2FA | Lightweight, good for self-hosted apps |
+| **SuperTokens** | Session + auth | Open source core, flexible integration |
 
 **Production fix:** Replace the header with real authN/authZ — OIDC/OAuth2 +
 JWT validation, roles/claims, and per-endpoint authorization. Never accept
@@ -150,6 +164,9 @@ committed template. No secrets are stored in code.
 `nvidia_api_key` is optional at import (`config.py:38`) — LLM calls fail at
 runtime if the key is missing, which is intentional: fail loudly, not silently.
 
+**Open source secret management:** **HashiCorp Vault** (open source), **SOPS**
+(encrypted file-based secrets), **Doppler** (free tier).
+
 **Production fix:**
 - Load config strictly from env / a secret manager (AWS Secrets Manager, GCP
   Secret Manager, HashiCorp Vault) — never commit `.env`.
@@ -165,6 +182,9 @@ runtime if the key is missing, which is intentional: fail loudly, not silently.
 `docker-compose.yml` (`db: postgres:15-alpine`). Every repository read/write is
 scoped by `customer_id` at the repository layer — cross-customer data access is
 denied by design. Seed data is idempotent (`scripts/seed_data.py`).
+
+**Open source database:** **PostgreSQL** (open source); managed options include
+AWS RDS, Google Cloud SQL, Azure Database for PostgreSQL.
 
 **Production fix:** Managed Postgres with TLS-encrypted connections, a
 least-privilege DB user, automated backups, and point-in-time recovery. Keep
@@ -186,15 +206,17 @@ against cross-customer data access.
   IDE/OS files from the build context — so no secrets or db artifacts enter the
   image.
 
-**Prototype gaps:**
-- Container runs as **root** (pip emits the root-user warning).
-- No CPU/memory resource limits or restart policies.
-- No image vulnerability scanning.
+**Status:** Implemented — non-root user (`supportdesk`), CPU/memory resource
+limits, `restart: unless-stopped`.
 
-**Production fix:** Run as a non-root user, add resource limits and restart
-policies, scan images (Trivy / Grype) in CI, enable Dependabot for dependency
-updates, and never bake secrets into the image — pass them at runtime via env
-/ secret manager.
+**Prototype gaps (remaining):**
+- No image vulnerability scanning in CI.
+
+Open source scanning options: **Trivy**, **Grype**, **Clair**.
+
+**Production fix:** Scan images (Trivy / Grype — both open source) in CI,
+enable Dependabot for dependency updates, and never bake secrets into the
+image — pass them at runtime via env / secret manager.
 
 ---
 
@@ -205,6 +227,10 @@ that scrubs emails, phones, cards, and SSNs from **every** log value before it
 is written (`logging.py:41-81`). Events are correlated by `conversation_id` /
 `customer_id`. The `GET /trace/{id}` endpoint exposes conversation state for
 the interview demo (`main.py:201-208`).
+
+**Open source SIEM/observability options:** **Elastic Stack** (Elasticsearch,
+Logstash, Kibana), **Grafana Loki + Grafana**, **SigNoz**, **VictoriaMetrics**,
+**OpenTelemetry** (collector).
 
 **Production fix:** Forward logs to a SIEM. Alert on rate-limit trips, tool-gate
 denials, interrupt / approval events, and failed auth. Keep trace IDs end-to-end
@@ -224,9 +250,13 @@ so any ticket can be traced from customer message to final reply.
    deterministic fake LLM and fails CI if routing accuracy drops more than 5
    points vs. the committed baseline (routing 74%, tool-selection ~41%).
 
-**Production fix:** Keep these gates. Add image scanning and Dependabot. Run
-the live-LLM smoke suite against the NVIDIA Build API on a cadence (not every
-commit), and add LLM-as-judge reply-quality scoring.
+**Status:** Dependabot added (`.github/dependabot.yml`).
+
+Open source scanning options: **Trivy**, **Grype**, **Clair**.
+
+**Production fix:** Keep these gates. Add image scanning (Trivy / Grype) in CI,
+run the live-LLM smoke suite against the NVIDIA Build API on a cadence (not
+every commit), and add LLM-as-judge reply-quality scoring.
 
 ---
 
