@@ -192,6 +192,11 @@ class ApproveResponse(BaseModel):
     final_reply: str | None = None
 
 
+# Idempotency store: conversation_id -> ApproveResponse dump (in-memory; production
+# persists via Postgres checkpointer).
+approval_decisions: dict[str, dict] = {}
+
+
 def _validate_settings() -> None:
     """Fail loudly in production if required config is missing instead of failing mid-request."""
     if settings.app_env == "production" and not settings.nvidia_api_key:
@@ -243,19 +248,27 @@ def chat(
 
 @app.post("/approve", response_model=ApproveResponse)
 def approve(req: ApproveRequest) -> ApproveResponse:
+    # Idempotent: a conversation can only be approved/rejected once. Re-calling
+    # /approve for the same conversation returns the cached decision instead of
+    # re-resuming the graph (which would error once the graph has completed).
+    existing = approval_decisions.get(req.conversation_id)
+    if existing is not None:
+        return ApproveResponse(**existing)
     decision = ApprovalDecision(approve=req.approve, note=req.note)
     result = resume(req.conversation_id, decision)
+    response = ApproveResponse(
+        status="complete",
+        conversation_id=req.conversation_id,
+        final_reply=result.get("final_reply"),
+    )
+    approval_decisions[req.conversation_id] = response.model_dump()
     logger.info(
         "approval_resumed",
         conversation_id=req.conversation_id,
         approve=req.approve,
         final_reply=(result.get("final_reply") or "")[:120],
     )
-    return ApproveResponse(
-        status="complete",
-        conversation_id=req.conversation_id,
-        final_reply=result.get("final_reply"),
-    )
+    return response
 
 
 @app.get("/trace/{conversation_id}")
