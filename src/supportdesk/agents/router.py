@@ -61,6 +61,7 @@ class RouterOutput(BaseModel):
     #   validates types but not enum membership; graph.py handles unknown intents
     #   by routing to escalation.
     """
+
     intent: str = Field(description="One of: billing, technical, account, escalation, other")
     urgency: str = Field(description="One of: low, medium, high, critical")
     confidence: float = Field(ge=0.0, le=1.0, description="Router confidence in the classification")
