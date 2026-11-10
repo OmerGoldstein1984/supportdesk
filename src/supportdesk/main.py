@@ -36,6 +36,7 @@ FAILURE MODES:
 
 from __future__ import annotations
 
+import os
 import time
 from collections import defaultdict
 from collections.abc import Callable
@@ -49,8 +50,31 @@ from .database import init_db
 from .graph import ApprovalDecision, get_graph, resume, run
 from .logging import configure_logging, get_logger
 
-RATE_LIMIT_REQUESTS = 30
-RATE_LIMIT_WINDOW_SECONDS = 60
+RATE_LIMIT_REQUESTS = int(os.environ.get("RATE_LIMIT_REQUESTS", "30"))
+RATE_LIMIT_WINDOW_SECONDS = int(os.environ.get("RATE_LIMIT_WINDOW_SECONDS", "60"))
+
+
+def _build_redis_client() -> Any:
+    """Best-effort Redis client for distributed rate limiting.
+
+    Returns ``None`` when ``REDIS_URL`` is unset, the ``redis`` package is
+    missing, or Redis is unreachable — the middleware then falls back to an
+    in-memory fixed window (single replica / local dev).
+    """
+    redis_url = os.environ.get("REDIS_URL")
+    if not redis_url:
+        return None
+    try:
+        import redis as redis_lib  # type: ignore[import-not-found]
+    except ImportError:
+        return None
+    try:
+        client = redis_lib.from_url(redis_url)
+        client.ping()
+        return client
+    except Exception:
+        return None
+
 
 configure_logging(settings.log_level)
 logger = get_logger("supportdesk")
@@ -71,12 +95,15 @@ def get_current_customer_id(x_customer_id: int = Header(alias="X-Customer-Id")) 
 
 
 class RateLimitMiddleware(BaseHTTPMiddleware):
-    """Fixed-window rate limiter keyed by X-Customer-Id.
+    """Rate limiter keyed by X-Customer-Id.
 
-    Protects the LLM-heavy /chat endpoint from abuse: every chat triggers router
-    + specialist + critic LLM calls, so an unbounded client can run up cost.
-    In production this would be Redis-backed and distributed; here it is
-    in-memory and per-process, adequate for a single-instance demo.
+    Uses a Redis sliding-window counter when ``REDIS_URL`` is configured and
+    reachable (shared across replicas), and falls back to an in-memory fixed
+    window otherwise (single replica / local dev).
+
+    Protects the LLM-heavy /chat endpoint from abuse: every chat triggers
+    router + specialist + critic LLM calls, so an unbounded client can run up
+    cost.
     """
 
     def __init__(
@@ -89,6 +116,18 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         self.limit = limit
         self.window_seconds = window_seconds
         self._windows: dict[str, list[float]] = defaultdict(list)
+        self._redis = _build_redis_client()
+
+    def _redis_count(self, customer_id: str, now: float) -> int:
+        """Add this request to the Redis sliding window and return its size."""
+        key = f"ratelimit:{customer_id}"
+        pipeline = self._redis.pipeline()
+        pipeline.zadd(key, {str(now): now})
+        pipeline.zremrangebyscore(key, 0, now - self.window_seconds)
+        pipeline.zcard(key)
+        pipeline.expire(key, self.window_seconds)
+        results = pipeline.execute()
+        return int(results[2])
 
     async def dispatch(
         self, request: Request, call_next: Callable[[Request], Awaitable[Response]]
@@ -97,6 +136,17 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
         customer_id = request.headers.get("x-customer-id", "anonymous")
         now = time.time()
+
+        if self._redis is not None:
+            count = self._redis_count(customer_id, now)
+            if count > self.limit:
+                return Response(
+                    "Rate limit exceeded. Try again later.",
+                    status_code=429,
+                    headers={"Retry-After": str(self.window_seconds)},
+                )
+            return await call_next(request)
+
         cutoff = now - self.window_seconds
         window = self._windows[customer_id]
         self._windows[customer_id] = [t for t in window if t > cutoff]
