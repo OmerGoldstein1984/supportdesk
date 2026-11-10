@@ -12,29 +12,28 @@ every tool call is gated in plain code, and no secrets live in the image.
 
 ## 1. Rate limiting & abuse protection (`src/supportdesk/main.py:73-110`)
 
-**What exists:** A `RateLimitMiddleware` (fixed window) guards `POST /chat` —
-the LLM-heavy endpoint. It is keyed by `X-Customer-Id`, defaults to 30 requests
-per 60-second window, and returns `429 + Retry-After` when exceeded. Because
-every chat triggers router + specialist + critic LLM calls, an unbounded client
-can run up cost quickly.
+**Status:** Implemented — Redis-backed sliding window with in-memory fallback.
+
+**What exists:** A `RateLimitMiddleware` guards `POST /chat` — the LLM-heavy
+endpoint. It is keyed by `X-Customer-Id`, defaults to 30 requests per 60-second
+window (overridable via `RATE_LIMIT_REQUESTS` / `RATE_LIMIT_WINDOW_SECONDS` env
+vars), and returns `429 + Retry-After` when exceeded.
+
+When `REDIS_URL` is set and reachable, the middleware uses a **Redis
+sliding-window counter** shared across all replicas. When Redis is unavailable
+or not configured, it falls back to an in-memory fixed window (single replica /
+local dev). The Redis client is loaded lazily and degraded gracefully, so the
+app starts and passes tests without Redis.
 
 ```python
-# main.py:73-110 (RateLimitMiddleware)
-RATE_LIMIT_REQUESTS = 30
-RATE_LIMIT_WINDOW_SECONDS = 60
+# main.py (RateLimitMiddleware)
+RATE_LIMIT_REQUESTS = int(os.environ.get("RATE_LIMIT_REQUESTS", "30"))
+RATE_LIMIT_WINDOW_SECONDS = int(os.environ.get("RATE_LIMIT_WINDOW_SECONDS", "60"))
 ```
 
-**Prototype gaps:**
-- **In-memory and per-process:** each replica tracks its own windows, so behind
-  a load balancer a client can effectively do `N × limit`. No shared state.
-- **No burst shaping:** fixed window permits a burst at window edges.
-- **Weak identity:** a missing `X-Customer-Id` falls back to a single shared
-  `"anonymous"` bucket.
-
-**Production fix:** Replace with a **Redis-backed sliding-window counter**
-(keyed on the authenticated customer ID, IP only as last resort), shared across
-all replicas. Add `429 + Retry-After`, alert on sustained rate-limit hits, and
-consider per-customer tiered limits.
+Because every chat triggers router + specialist + critic LLM calls, an
+unbounded client can run up cost quickly. Rate limiting is the first line of
+defense against LLM cost abuse.
 
 > Related: `docs/08-weaknesses-and-next-steps.md` limitation #9 — "No rate
 > limiting or abuse protection."
@@ -104,13 +103,17 @@ approved, when, and for what amount).
 
 Tool output is sanitized too — defense in depth against tool-output injection.
 
+**Status:** Hardened — the detector normalizer now applies Unicode NFKC
+normalization (`security.py`), so fullwidth, zero-width, and homoglyph
+obfuscation collapses to matchable signatures before pattern matching.
+
 **Production fix:** Keep redaction **before** the LLM (never after). Log
 redaction/detection counts (not content) for tuning, and consider a dedicated
 LLM gateway / model firewall in front of the NVIDIA Build API for additional
 inspection.
 
 > Related: `docs/08` limitation #2 — the detector is regex-based and can be
-> obfuscated; harden with normalization and more variants.
+> obfuscated; normalization is a first hardening step, not a guarantee.
 
 ---
 
@@ -227,20 +230,46 @@ commit), and add LLM-as-judge reply-quality scoring.
 
 ---
 
+## Deferred items (intentional)
+
+**Authentication & authorization (`X-Customer-Id` header) and secrets
+(secret-manager integration) are intentionally NOT implemented in this round.**
+The project deliberately keeps authN as a header-based placeholder
+(`X-Customer-Id`, authoritative but not cryptographically verified) and keeps
+secrets as environment variables loaded at runtime (`.env` is gitignored, no
+secrets in code).
+
+Rationale: these are infrastructure / architectural decisions rather than
+contained code changes:
+
+- **AuthN/authZ:** requires an OIDC/OAuth2 provider choice, JWT validation,
+  key rotation, and role mapping — a decision about the identity stack, not a
+  code tweak.
+- **Secrets:** requires a secret-manager choice (AWS Secrets Manager, GCP
+  Secret Manager, HashiCorp Vault) and a rotation strategy.
+
+A startup validation (`main.py`) fails loudly in production when
+`NVIDIA_API_KEY` is missing (`app_env == production`), and `.env` is excluded
+from the Docker build context via `.dockerignore`. When you choose an auth
+provider and secret manager, swap the header-based customer resolution and
+env-based config accordingly.
+
+---
+
 ## Production readiness checklist
 
 | Control | Status | Production action |
 |---------|--------|-------------------|
-| Rate limiting | In-memory, per-process | Redis-backed sliding window, shared across replicas |
-| Tool gate | Deterministic, allowlisted | Add immutable audit log of every decision |
+| Rate limiting | Implemented — Redis + in-memory fallback | REDIS_URL optional; degrades to in-memory |
+| Tool gate | Deterministic, allowlisted + audit log | Append-only GateAuditEntry per decision |
 | Human approval | `interrupt()` + `/approve` | Postgres checkpointer, idempotent `/approve`, TTL |
-| Prompt injection | Regex + PII redaction | Harden detector; consider LLM gateway |
-| Authentication | `X-Customer-Id` header (placeholder) | Real OIDC/OAuth2 + JWT, never trust body `customer_id` |
-| Secrets | `.env`, gitignored | Secret manager; validate required fields at startup |
+| Prompt injection | Hardened — NFKC normalization | Log detection counts; consider LLM gateway |
+| Authentication | Deferred — see Deferred items | OIDC/OAuth2 + JWT when provider chosen |
+| Secrets | Deferred — see Deferred items | Secret manager when provider chosen |
 | Database | SQLite / Postgres, customer-scoped | Managed Postgres + TLS, least-privilege user, backups |
-| Container | `python:3.12-slim`, `.dockerignore` | Non-root user, resource limits, image scanning |
+| Container | Non-root user + resource limits | Image scanning, restart policy |
 | Observability | Structured JSON + PII redaction | SIEM integration, alerts, trace IDs |
-| CI/CD | Lint / types / test / eval gate | Keep gates; add image scanning + Dependabot |
+| CI/CD | Lint / types / test / eval gate + Dependabot | Image scanning (Trivy/Grype) |
 
 ---
 
