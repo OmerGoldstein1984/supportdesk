@@ -58,6 +58,6 @@ jobs:
       - name: Eval regression gate (sample)
         run: DATABASE_URL=sqlite:///./test.db python -m supportdesk.evals.cli run --sample --baseline
       - name: Upload coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v7
         with:
           file: ./coverage.xml
