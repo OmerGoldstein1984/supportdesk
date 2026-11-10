@@ -11,15 +11,14 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends gcc libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install dependencies first (better layer caching)
+# Install dependencies (pyproject.toml first for layer caching; src/ must be
+# present for the editable install to resolve `egg_base = src`)
 COPY pyproject.toml ./
-RUN pip install --no-cache-dir -e ".[dev]"
-
-# Application code
 COPY ./src ./src
 COPY ./scripts ./scripts
-COPY ./kb ./kb
 COPY ./data ./data
+
+RUN pip install --no-cache-dir -e ".[dev]"
 
 EXPOSE 8000
 
